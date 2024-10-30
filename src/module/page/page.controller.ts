@@ -1,5 +1,6 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { PageService } from './page.service';
+import { PageDto } from './page.dto';
 
 @Controller('/pages')
 export class PageController {
@@ -12,5 +13,13 @@ export class PageController {
 		@Param('pageId', ParseIntPipe) pageId: number
 	) {
 		return await this.pageService.getPage(pageId);
+	}
+
+	@Post('/')
+	public async addPage(
+		@Body() body: PageDto
+	) {
+		const pageId = await this.pageService.addPage(body);
+		return pageId;
 	}
 }

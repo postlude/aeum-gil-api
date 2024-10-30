@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PageRepository } from 'src/database/repository/page.repository';
+import { PageDto } from './page.dto';
 
 @Injectable()
 export class PageService {
@@ -13,5 +14,10 @@ export class PageService {
 			throw new NotFoundException();
 		}
 		return page;
+	}
+
+	public async addPage(page: PageDto) {
+		const result = await this.pageRepository.insert(page);
+		return result.identifiers[0].id as number;
 	}
 }
