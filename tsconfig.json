@@ -9,6 +9,7 @@
 		"noImplicitAny": true,
 		"emitDecoratorMetadata": true,
 		"strict": true,
+		"strictPropertyInitialization": false
 		// "allowSyntheticDefaultImports": true,
 		// "sourceMap": true,
 		// "declaration": true,
