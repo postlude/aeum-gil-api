@@ -2,6 +2,15 @@ import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Page } from './entity/page.entity';
 import { PageRepository } from './repository/page.repository';
+import { DataSource } from 'typeorm';
+
+const entities = [ Page ];
+const providers = [ PageRepository ]
+	.map((repository) => ({
+		provide: repository,
+		useFactory: (dataSource: DataSource) => new repository(dataSource),
+		inject: [ DataSource ]
+	}));
 
 @Global()
 @Module({
@@ -13,14 +22,11 @@ import { PageRepository } from './repository/page.repository';
 			username: 'circuitous-road',
 			password: 'circuitous-road',
 			database: 'circuitous_road',
-			entities: [
-				Page
-			]
+			entities
 		}),
-		TypeOrmModule.forFeature([
-			PageRepository
-		])
+		TypeOrmModule.forFeature(entities)
 	],
-	exports: [ TypeOrmModule ]
+	providers,
+	exports: [ TypeOrmModule, ...providers ]
 })
 export class DatabaseModule {}
