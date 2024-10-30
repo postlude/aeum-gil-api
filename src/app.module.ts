@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { DatabaseModule } from './database/database.module';
 import { PageModule } from './module/page/page.module';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
 	imports: [
@@ -9,6 +10,11 @@ import { PageModule } from './module/page/page.module';
 		PageModule
 	],
 	controllers: [ AppController ],
-	providers: []
+	providers: [
+		{
+			provide: APP_PIPE,
+			useValue: new ValidationPipe({ transform: true })
+		}
+	]
 })
 export class AppModule {}
