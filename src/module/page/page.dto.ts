@@ -1,15 +1,21 @@
 import { Expose } from 'class-transformer';
-import { IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 
 export class PageDto {
-	@ValidateIf((_o, value) => value !== null)
-	@IsString()
-	@IsNotEmpty()
 	@Expose()
-	public description: string | null;
+	@IsOptional()
+	@IsInt()
+	@Min(1)
+	public prevPageId?: number | null;
 
+	@Expose()
+	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
+	public description?: string | null;
+
 	@Expose()
+	@IsString()
+	@IsNotEmpty()
 	public content: string;
 }

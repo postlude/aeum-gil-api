@@ -20,4 +20,8 @@ export class PageService {
 		const result = await this.pageRepository.insert(page);
 		return result.identifiers[0].id as number;
 	}
+
+	public async setPage(pageId: number, page: PageDto) {
+		await this.pageRepository.update(pageId, page);
+	}
 }
