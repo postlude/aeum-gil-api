@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { PageModule } from './module/page/page.module';
 
@@ -10,6 +9,6 @@ import { PageModule } from './module/page/page.module';
 		PageModule
 	],
 	controllers: [ AppController ],
-	providers: [ AppService ]
+	providers: []
 })
 export class AppModule {}
