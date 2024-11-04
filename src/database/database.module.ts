@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Page } from './entity/page.entity';
 import { PageRepository } from './repository/page.repository';
 import { DataSource } from 'typeorm';
+import { addTransactionalDataSource } from 'typeorm-transactional';
 
 const entities = [ Page ];
 const providers = [ PageRepository ]
@@ -15,14 +16,25 @@ const providers = [ PageRepository ]
 @Global()
 @Module({
 	imports: [
-		TypeOrmModule.forRoot({
-			type: 'mysql',
-			host: 'localhost',
-			port: 3307,
-			username: 'circuitous-road',
-			password: 'circuitous-road',
-			database: 'circuitous_road',
-			entities
+		TypeOrmModule.forRootAsync({
+			useFactory() {
+				return {
+					type: 'mysql',
+					host: 'localhost',
+					port: 3307,
+					username: 'circuitous-road',
+					password: 'circuitous-road',
+					database: 'circuitous_road',
+					entities,
+					logging: true
+				};
+			},
+			async dataSourceFactory(options) {
+				if (!options) {
+					throw new Error('Invalid options passed');
+				}
+				return addTransactionalDataSource(new DataSource(options));
+			}
 		}),
 		TypeOrmModule.forFeature(entities)
 	],
