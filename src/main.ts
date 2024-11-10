@@ -14,7 +14,7 @@ async function bootstrap() {
 
 	await app.listen(port);
 
-	console.log('[CIRCUITOUS-ROAD API]');
+	console.log('[AEUM-GIL API]');
 	console.log(`PORT : ${port}`);
 }
 bootstrap();

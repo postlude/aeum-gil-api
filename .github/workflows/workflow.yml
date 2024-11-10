@@ -1,11 +1,11 @@
-name: Circuitous API Docker Build
+name: Aeum-gil API Docker Build
 
 on:
   push:
     branches: [master]
 
 jobs:
-  circuitous-api-deploy:
+  aeum-gil-api-deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Source Code Checkout
@@ -24,7 +24,7 @@ jobs:
         context: .
         file: ./build/Dockerfile
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/circuitous-api:prod
+        tags: ghcr.io/${{ github.repository_owner }}/aeum-gil-api:prod
     # - name: Configure AWS Credentials
     #   uses: aws-actions/configure-aws-credentials@master
     #   with:
