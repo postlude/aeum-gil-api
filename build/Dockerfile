@@ -1,6 +1,6 @@
 FROM node:20
 
-ENV SERVER_HOME /usr/src/circuitous-api
+ENV SERVER_HOME /usr/src/aeum-gil-api
 
 RUN mkdir -p ${SERVER_HOME}
 

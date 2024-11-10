@@ -4,7 +4,7 @@ import {
 	PrimaryGeneratedColumn
 } from 'typeorm';
 
-@Entity({ database: 'circuitous_road', name: 'page' })
+@Entity({ database: 'aeum_gil', name: 'page' })
 export class Page {
 	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
 	public id: number;
