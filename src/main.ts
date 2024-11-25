@@ -8,7 +8,7 @@ async function bootstrap() {
 	initializeTransactionalContext();
 
 	const app = await NestFactory.create(AppModule);
-	const port = 4000;
+	const port = 3000;
 
 	app.enableCors({
 		origin: [ /localhost/ ]
