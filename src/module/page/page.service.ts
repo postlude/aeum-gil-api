@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PageRepository } from 'src/database/repository/page.repository';
-import { PageDto } from './page.dto';
+import { SavePageDto, PageDto } from './page.dto';
 import { Transactional } from 'typeorm-transactional';
 import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
 import { PageType } from 'src/database/entity/page.entity';
@@ -20,7 +20,7 @@ export class PageService {
 		return page;
 	}
 
-	public async addPage(dto: PageDto) {
+	public async addPage(dto: SavePageDto) {
 		const { choiceOptions, ...page } = dto;
 
 		if (page.nextPageId) {
@@ -34,7 +34,7 @@ export class PageService {
 	}
 
 	@Transactional()
-	private async saveNewPage(dto: PageDto) {
+	private async saveNewPage(dto: SavePageDto) {
 		const { choiceOptions, ...page } = dto;
 
 		const result = await this.pageRepository.insert(page);

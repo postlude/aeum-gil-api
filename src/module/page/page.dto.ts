@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
 import { PageType } from 'src/database/entity/page.entity';
-import { ChoiceOptionDto } from '../choice-option/choice-option.dto';
+import { ChoiceOptionDto, SaveChoiceOptionDto } from '../choice-option/choice-option.dto';
 import { Type } from 'class-transformer';
 
 export class PageDto {
@@ -31,11 +31,13 @@ export class PageDto {
 	@IsString()
 	@IsNotEmpty()
 	public content: string;
+}
 
-	@ApiPropertyOptional({ type: [ ChoiceOptionDto ], description: '선택지' })
+export class SavePageDto extends PageDto {
+	@ApiPropertyOptional({ type: [ SaveChoiceOptionDto ], description: '선택지' })
 	@IsOptional()
-	@Type(() => ChoiceOptionDto)
+	@Type(() => SaveChoiceOptionDto)
 	@IsArray()
 	@ValidateNested({ each: true })
-	public choiceOptions?: ChoiceOptionDto[];
+	public choiceOptions?: SaveChoiceOptionDto[];
 }
