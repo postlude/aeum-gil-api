@@ -4,6 +4,11 @@ import {
 	PrimaryGeneratedColumn
 } from 'typeorm';
 
+export enum PageType {
+	ContentOnly = 1,
+	HasChoiceOption
+}
+
 @Entity({ database: 'aeum_gil', name: 'page', comment: '페이지' })
 export class Page {
 	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
@@ -16,7 +21,7 @@ export class Page {
 	public description: string | null;
 
 	@Column({ type: 'tinyint', unsigned: true, comment: '1: content only, 2: 선택지 존재' })
-	public type: number;
+	public type: PageType;
 
 	@Column({ type: 'varchar', length: 200, comment: '제목' })
 	public title: string;
