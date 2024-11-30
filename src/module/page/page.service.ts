@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PageRepository } from 'src/database/repository/page.repository';
-import { SavePageDto, PageDto } from './page.dto';
-import { Transactional } from 'typeorm-transactional';
-import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
+import { plainToInstance } from 'class-transformer';
 import { PageType } from 'src/database/entity/page.entity';
+import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
+import { PageRepository } from 'src/database/repository/page.repository';
+import { Transactional } from 'typeorm-transactional';
+import { FetchPageDto, SavePageDto } from './page.dto';
 
 @Injectable()
 export class PageService {
@@ -17,7 +18,18 @@ export class PageService {
 		if (!page) {
 			throw new NotFoundException();
 		}
-		return page;
+
+		const choiceOptions = page.type === PageType.HasChoiceOption
+			? await this.choiceOptionRepository.find({
+				where: { pageId },
+				order: { orderNum: 'ASC' }
+			})
+			: undefined;
+
+		return plainToInstance(FetchPageDto, {
+			...page,
+			choiceOptions
+		}, { excludeExtraneousValues: true });
 	}
 
 	public async addPage(dto: SavePageDto) {
