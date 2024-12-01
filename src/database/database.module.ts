@@ -6,9 +6,11 @@ import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { Page } from './entity/page.entity';
 import { PageRepository } from './repository/page.repository';
+import { ChoiceOption } from './entity/choice-option.entity';
+import { ChoiceOptionRepository } from './repository/choice-option.repository';
 
-const entities = [ Page ];
-const providers = [ PageRepository ]
+const entities = [ Page, ChoiceOption ];
+const providers = [ PageRepository, ChoiceOptionRepository ]
 	.map((repository) => ({
 		provide: repository,
 		useFactory: (dataSource: DataSource) => new repository(dataSource),
