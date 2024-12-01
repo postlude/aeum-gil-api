@@ -115,4 +115,9 @@ export class PageService {
 
 		await this.choiceOptionRepository.insert(options);
 	}
+
+	public async removePage(pageId: number) {
+		// ON DELETE CASCADE 로 choice_option 도 삭제됨
+		await this.pageRepository.delete({ id: pageId });
+	}
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FetchPageDto, SavePageDto } from './page.dto';
 import { PageService } from './page.service';
@@ -37,6 +37,16 @@ export class PageController {
 		@Body() body: SavePageDto
 	) {
 		await this.pageService.setPage(pageId, body);
+		return pageId;
+	}
+
+	@Delete('/:pageId')
+	@ApiOperation({ summary: '페이지 삭제', description: '물리 삭제이므로 복구 불가' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '삭제된 page.id' })
+	public async removePage(
+		@Param('pageId', ParseIntPipe) pageId: number
+	) {
+		await this.pageService.removePage(pageId);
 		return pageId;
 	}
 }
