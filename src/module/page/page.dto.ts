@@ -4,7 +4,7 @@ import { IsArray, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Mi
 import { PageType } from 'src/database/entity/page.entity';
 import { FetchChoiceOptionDto, SaveChoiceOptionDto } from '../choice-option/choice-option.dto';
 
-class PageDtoCommon {
+export class PageDtoCommon {
 	@ApiProperty({ type: Number, nullable: true, description: '선택지가 없는 타입인 경우 다음 페이지 id' })
 	@Expose()
 	@IsOptional()
