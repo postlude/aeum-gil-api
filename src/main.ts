@@ -17,7 +17,7 @@ async function bootstrap() {
 
 	const swaggerConfig = new DocumentBuilder()
 		.setTitle('에움길 API')
-		.setVersion('0.2.0')
+		.setVersion('0.3.0')
 		.build();
 	const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig);
 	SwaggerModule.setup('swagger', app, documentFactory);
