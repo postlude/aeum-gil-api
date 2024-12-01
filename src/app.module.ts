@@ -4,6 +4,7 @@ import { DatabaseModule } from './database/database.module';
 import { PageModule } from './module/page/page.module';
 import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { ChoiceOptionModule } from './module/choice-option/choice-option.module';
 
 @Module({
 	imports: [
@@ -13,7 +14,8 @@ import { ConfigModule } from '@nestjs/config';
 			isGlobal: true
 		}),
 		DatabaseModule,
-		PageModule
+		PageModule,
+		ChoiceOptionModule
 	],
 	controllers: [ AppController ],
 	providers: [
