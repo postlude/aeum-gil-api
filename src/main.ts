@@ -19,8 +19,10 @@ async function bootstrap() {
 		.setTitle('에움길 API')
 		.setVersion('0.3.0')
 		.build();
-	const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig);
-	SwaggerModule.setup('swagger', app, documentFactory);
+	const document = SwaggerModule.createDocument(app, swaggerConfig, {
+		operationIdFactory: (controllerKey: string, methodKey: string) => methodKey
+	});
+	SwaggerModule.setup('swagger', app, document);
 
 	await app.listen(port);
 
