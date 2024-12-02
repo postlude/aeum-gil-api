@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
@@ -30,4 +30,11 @@ export class FetchChoiceOptionDto extends ChoiceOptionDtoCommon {
 	public id: number;
 }
 
-export class SaveChoiceOptionDto extends OmitType(ChoiceOptionDtoCommon, [ 'orderNum' ]) {}
+export class SaveChoiceOptionDto extends OmitType(ChoiceOptionDtoCommon, [ 'orderNum' ]) {
+	@ApiPropertyOptional({ type: Number, description: '신규 추가: undefined, 수정: 값 존재' })
+	@Expose()
+	@IsOptional()
+	@IsInt()
+	@Min(1)
+	public id?: number;
+}
