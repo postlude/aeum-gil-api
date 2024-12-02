@@ -17,22 +17,12 @@ export class PageService {
 	) {}
 
 	public async getPage(pageId: number) {
-		const [ page, choiceOptions ] = await Promise.all([
-			this.pageRepository.findOneBy({ id: pageId }),
-			this.choiceOptionRepository.find({
-				where: { pageId },
-				order: { orderNum: 'ASC' }
-			})
-		]);
-
+		const page = await this.pageRepository.findWithChoiceOptions(pageId);
 		if (!page) {
 			throw new NotFoundException();
 		}
 
-		return plainToInstance(FetchPageDto, {
-			...page,
-			choiceOptions
-		}, { excludeExtraneousValues: true });
+		return plainToInstance(FetchPageDto, page, { excludeExtraneousValues: true });
 	}
 
 	public async addPage(dto: SavePageDto) {
@@ -68,16 +58,15 @@ export class PageService {
 	public async setPage(pageId: number, dto: SavePageDto) {
 		const nextPageIds = dto.choiceOptions.map(({ nextPageId }) => nextPageId).filter(isExists);
 
-		const [ page, curChoiceOptions ] = await Promise.all([
-			this.pageRepository.findOneBy({ id: pageId }),
-			this.choiceOptionRepository.findBy({ pageId }),
+		const [ page ] = await Promise.all([
+			this.pageRepository.findWithChoiceOptions(pageId),
 			this.checkNextPageExists(nextPageIds)
 		]);
 		if (!page) {
 			throw new NotFoundException('해당 페이지가 없습니다.');
 		}
 
-		const curChoiceOptionIds = curChoiceOptions.map(({ id }) => id);
+		const curChoiceOptionIds = page.choiceOptions.map(({ id }) => id);
 		await this.modifyPage(pageId, curChoiceOptionIds, dto);
 
 		return pageId;
