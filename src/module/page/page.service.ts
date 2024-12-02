@@ -60,7 +60,7 @@ export class PageService {
 		const result = await this.pageRepository.insert(page);
 		const pageId = result.identifiers[0].id as number;
 
-		await this.saveNewChoiceOptions(pageId, choiceOptions);
+		await this.saveChoiceOptions(pageId, choiceOptions);
 
 		return pageId;
 	}
@@ -103,10 +103,10 @@ export class PageService {
 			}
 		});
 
-		await this.saveNewChoiceOptions(pageId, choiceOptions);
+		await this.saveChoiceOptions(pageId, choiceOptions);
 	}
 
-	private async saveNewChoiceOptions(pageId: number, choiceOptions: SaveChoiceOptionDto[]) {
+	private async saveChoiceOptions(pageId: number, choiceOptions: SaveChoiceOptionDto[]) {
 		const options = choiceOptions.map(({ id, nextPageId, content }, index) => ({
 			id,
 			pageId,
