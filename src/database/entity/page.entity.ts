@@ -1,8 +1,10 @@
 import {
 	Column,
 	Entity,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from 'typeorm';
+import { ChoiceOption } from './choice-option.entity';
 
 @Entity({ database: 'aeum_gil', name: 'page', comment: '페이지' })
 export class Page {
@@ -24,7 +26,6 @@ export class Page {
 	@Column({ name: 'updated_at', type: 'datetime' })
 	public updatedAt: Date;
 
-	// @ManyToOne(() => Page, (page) => page.id, { nullable: true })
-	// @JoinColumn({ name: 'prev_page_id' })
-	// public previousPage: Page | null;
+	@OneToMany(() => ChoiceOption, (choiceOption) => choiceOption.page)
+	public choiceOptions: ChoiceOption[];
 }

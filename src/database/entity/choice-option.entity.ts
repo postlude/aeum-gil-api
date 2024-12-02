@@ -1,8 +1,12 @@
 import {
 	Column,
 	Entity,
-	PrimaryGeneratedColumn
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
+	Relation
 } from 'typeorm';
+import { Page } from './page.entity';
 
 @Entity({ database: 'aeum_gil', name: 'choice_option', comment: '선택지' })
 export class ChoiceOption {
@@ -26,4 +30,8 @@ export class ChoiceOption {
 
 	@Column({ type: 'datetime', name: 'updated_at' })
 	public updatedAt: Date;
+
+	@ManyToOne(() => Page, (page) => page.choiceOptions)
+	@JoinColumn({ name: 'page_id' })
+	public page: Relation<Page>;
 }
