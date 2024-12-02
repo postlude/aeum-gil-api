@@ -9,8 +9,11 @@ export class ChoiceOption {
 	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
 	public id: number;
 
-	@Column({ name: 'page_id', type: 'int', unsigned: true })
+	@Column({ name: 'page_id', type: 'int', unsigned: true, comment: '선택지가 속한 페이지 id' })
 	public pageId: number;
+
+	@Column({ name: 'next_page_id', type: 'int', unsigned: true, nullable: true, comment: '선택지 선택시 이동할 다음 페이지 id' })
+	public nextPageId: number | null;
 
 	@Column({ name: 'order_num', type: 'tinyint', unsigned: true, comment: '선택지 순서' })
 	public orderNum: number;

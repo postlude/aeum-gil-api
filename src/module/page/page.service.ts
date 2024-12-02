@@ -1,11 +1,12 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { PageType } from 'src/database/entity/page.entity';
 import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
+import { In } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
-import { FetchPageDto, PageDtoCommon, SavePageDto } from './page.dto';
 import { SaveChoiceOptionDto } from '../choice-option/choice-option.dto';
+import { FetchPageDto, PageDtoCommon, SavePageDto } from './page.dto';
+import { isExists } from 'src/util/validator';
 
 @Injectable()
 export class PageService {
@@ -15,17 +16,17 @@ export class PageService {
 	) {}
 
 	public async getPage(pageId: number) {
-		const page = await this.pageRepository.findOneBy({ id: pageId });
-		if (!page) {
-			throw new NotFoundException();
-		}
-
-		const choiceOptions = page.type === PageType.HasChoiceOption
-			? await this.choiceOptionRepository.find({
+		const [ page, choiceOptions ] = await Promise.all([
+			this.pageRepository.findOneBy({ id: pageId }),
+			this.choiceOptionRepository.find({
 				where: { pageId },
 				order: { orderNum: 'ASC' }
 			})
-			: undefined;
+		]);
+
+		if (!page) {
+			throw new NotFoundException();
+		}
 
 		return plainToInstance(FetchPageDto, {
 			...page,
@@ -34,16 +35,21 @@ export class PageService {
 	}
 
 	public async addPage(dto: SavePageDto) {
-		const { choiceOptions, ...page } = dto;
-
-		if (page.nextPageId) {
-			const count = await this.pageRepository.countBy({ id: page.nextPageId });
-			if (!count) {
-				throw new NotFoundException(`${page.nextPageId}에 해당하는 페이지가 없습니다.`);
-			}
+		const nextPageIds = dto.choiceOptions.map(({ nextPageId }) => nextPageId).filter(isExists);
+		if (nextPageIds.length) {
+			await this.checkNextPageExists(nextPageIds);
 		}
 
 		return this.saveNewPage(dto);
+	}
+
+	private async checkNextPageExists(nextPageIds: number[]) {
+		const count = await this.pageRepository.countBy({ id: In(nextPageIds) });
+		if (count !== nextPageIds.length) {
+			throw new NotFoundException();
+		}
+
+		return true;
 	}
 
 	@Transactional()
@@ -53,24 +59,20 @@ export class PageService {
 		const result = await this.pageRepository.insert(page);
 		const pageId = result.identifiers[0].id as number;
 
-		await this.saveNewChoiceOptions(page.type, pageId, choiceOptions);
+		await this.saveNewChoiceOptions(pageId, choiceOptions);
 
 		return pageId;
 	}
 
 	public async setPage(pageId: number, dto: SavePageDto) {
-		const { choiceOptions, ...pageDto } = dto;
+		const nextPageIds = dto.choiceOptions.map(({ nextPageId }) => nextPageId).filter(isExists);
 
-		const [ page, nextPageCount ] = await Promise.all([
+		const [ page ] = await Promise.all([
 			this.pageRepository.findOneBy({ id: pageId }),
-			pageDto.nextPageId ? this.pageRepository.countBy({ id: pageDto.nextPageId }) : null
+			this.checkNextPageExists(nextPageIds)
 		]);
-
 		if (!page) {
 			throw new NotFoundException('해당 페이지가 없습니다.');
-		}
-		if (pageDto.nextPageId && !nextPageCount) {
-			throw new NotFoundException(`${pageDto.nextPageId}에 해당하는 페이지가 없습니다.`);
 		}
 
 		await this.modifyPage(pageId, dto);
@@ -95,20 +97,13 @@ export class PageService {
 			}
 		});
 
-		await this.saveNewChoiceOptions(page.type, pageId, choiceOptions);
+		await this.saveNewChoiceOptions(pageId, choiceOptions);
 	}
 
-	private async saveNewChoiceOptions(pageType: PageType, pageId: number, choiceOptions?: SaveChoiceOptionDto[]) {
-		if (pageType !== PageType.HasChoiceOption) {
-			return;
-		}
-
-		if (!choiceOptions?.length) {
-			throw new BadRequestException('선택지가 필요합니다.');
-		}
-
-		const options = choiceOptions.map(({ content }, index) => ({
+	private async saveNewChoiceOptions(pageId: number, choiceOptions: SaveChoiceOptionDto[]) {
+		const options = choiceOptions.map(({ nextPageId, content }, index) => ({
 			pageId,
+			nextPageId,
 			orderNum: index + 1,
 			content
 		}));
