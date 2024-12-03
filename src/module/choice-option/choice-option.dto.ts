@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 class ChoiceOptionDtoCommon {
-	@ApiProperty({ type: Number, nullable: true, description: '선택지 선택시 이동할 다음 페이지 id', minimum: 1 })
+	@ApiPropertyOptional({ type: Number, nullable: true, description: '선택지 선택시 이동할 다음 페이지 id', minimum: 1 })
 	@Expose()
 	@IsOptional()
 	@IsInt()
