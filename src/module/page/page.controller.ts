@@ -30,7 +30,7 @@ export class PageController {
 	}
 
 	@Put('/:pageId')
-	@ApiOperation({ summary: '페이지 수정', description: '선택지는 수정할 때마다 전부 삭제하고 다시 insert함' })
+	@ApiOperation({ summary: '페이지 수정' })
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '수정된 page.id' })
 	public async setPage(
 		@Param('pageId', ParseIntPipe) pageId: number,
