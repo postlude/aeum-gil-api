@@ -8,8 +8,10 @@ import { Page } from './entity/page.entity';
 import { PageRepository } from './repository/page.repository';
 import { ChoiceOption } from './entity/choice-option.entity';
 import { ChoiceOptionRepository } from './repository/choice-option.repository';
+import { Item } from './entity/item.entity';
+import { ChoiceOptionItemMapping } from './entity/choice-option-item-mapping.entity';
 
-const entities = [ Page, ChoiceOption ];
+const entities = [ Page, ChoiceOption, Item, ChoiceOptionItemMapping ];
 const providers = [ PageRepository, ChoiceOptionRepository ]
 	.map((repository) => ({
 		provide: repository,
