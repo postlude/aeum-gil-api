@@ -41,7 +41,7 @@ export class PageController {
 	}
 
 	@Delete('/:pageId')
-	@ApiOperation({ summary: '페이지 삭제', description: '물리 삭제이므로 복구 불가' })
+	@ApiOperation({ summary: '페이지 삭제' })
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '삭제된 page.id' })
 	public async removePage(
 		@Param('pageId', ParseIntPipe) pageId: number

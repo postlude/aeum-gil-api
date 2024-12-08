@@ -23,4 +23,8 @@ export class ItemService {
 		});
 		return result.id;
 	}
+
+	public async removeItem(itemId: number) {
+		await this.itemRepository.delete({ id: itemId })
+	}
 }

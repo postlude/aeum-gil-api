@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ItemService } from './item.service';
 import { FetchItemDto, SaveItemDto } from './item.dto';
@@ -35,6 +35,16 @@ export class ItemController {
 		@Body() body: SaveItemDto
 	) {
 		await this.itemService.saveItem(body, itemId);
+		return itemId;
+	}
+
+	@Delete('/:itemId')
+	@ApiOperation({ summary: '아이템 삭제' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '삭제된 item.id' })
+	public async removeItem(
+		@Param('itemId', ParseIntPipe) itemId: number
+	) {
+		await this.itemService.removeItem(itemId);
 		return itemId;
 	}
 }
