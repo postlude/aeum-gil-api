@@ -14,11 +14,13 @@ export class ItemService {
 		return plainToInstance(FetchItemDto, items, { excludeExtraneousValues: true });
 	}
 
-	public async addItem(params: SaveItemDto) {
-		const parsed = plainToInstance(ItemDtoCommon, params, { excludeExtraneousValues: true });
+	public async saveItem(dto: SaveItemDto, itemId?: number) {
+		const parsed = plainToInstance(ItemDtoCommon, dto, { excludeExtraneousValues: true });
 
-		const result = await this.itemRepository.insert(parsed);
-		const itemId = result.identifiers[0].id as number;
-		return itemId;
+		const result = await this.itemRepository.save({
+			...parsed,
+			id: itemId
+		});
+		return result.id;
 	}
 }

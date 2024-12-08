@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ItemService } from './item.service';
 import { FetchItemDto, SaveItemDto } from './item.dto';
@@ -23,7 +23,18 @@ export class ItemController {
 	public async addItem(
 		@Body() body: SaveItemDto
 	) {
-		const itemId = await this.itemService.addItem(body);
+		const itemId = await this.itemService.saveItem(body);
+		return itemId;
+	}
+
+	@Put('/:itemId')
+	@ApiOperation({ summary: '아이템 수정' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '수정된 item.id' })
+	public async setItem(
+		@Param('itemId', ParseIntPipe) itemId: number,
+		@Body() body: SaveItemDto
+	) {
+		await this.itemService.saveItem(body, itemId);
 		return itemId;
 	}
 }
