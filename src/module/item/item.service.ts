@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { ItemRepository } from 'src/database/repository/item.repository';
-import { ItemDto } from './item.dto';
+import { FetchItemDto } from './item.dto';
 
 @Injectable()
 export class ItemService {
@@ -11,6 +11,6 @@ export class ItemService {
 
 	public async getAllItems() {
 		const items = await this.itemRepository.findBy({});
-		return plainToInstance(ItemDto, items, { excludeExtraneousValues: true });
+		return plainToInstance(FetchItemDto, items, { excludeExtraneousValues: true });
 	}
 }
