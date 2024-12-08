@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString, IsUrl, Max, Min } from 'class-validator';
 
-class ItemDtoCommon {
+export class ItemDtoCommon {
 	@ApiProperty({ type: String })
 	@Expose()
 	@IsString()
@@ -34,3 +34,5 @@ export class FetchItemDto extends ItemDtoCommon {
 	@Expose()
 	public id: number;
 }
+
+export class SaveItemDto extends ItemDtoCommon {}
