@@ -1,7 +1,7 @@
 import {
 	Column,
 	Entity,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from 'typeorm';
 
 export enum ItemActionType {
@@ -11,16 +11,13 @@ export enum ItemActionType {
 
 @Entity({ database: 'aeum_gil', name: 'choice_option_item_mapping', comment: '선택지-아이템 매핑' })
 export class ChoiceOptionItemMapping {
-	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
-	public id: number;
-
-	@Column({ type: 'int', unsigned: true })
+	@PrimaryColumn({ name: 'choice_option_id', type: 'int', unsigned: true })
 	public choiceOptionId: number;
 
-	@Column({ type: 'int', unsigned: true })
+	@PrimaryColumn({ name: 'item_id', type: 'int', unsigned: true })
 	public itemId: number;
 
-	@Column({ type: 'tinyint', unsigned: true, comment: '1: 획득, 2: 소모' })
+	@Column({ name: 'action_type', type: 'tinyint', unsigned: true, comment: '1: 획득, 2: 소모' })
 	public actionType: ItemActionType;
 
 	@Column({ name: 'created_at', type: 'datetime' })

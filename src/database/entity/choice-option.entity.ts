@@ -25,10 +25,10 @@ export class ChoiceOption {
 	@Column({ type: 'varchar', length: 300, comment: '내용' })
 	public content: string;
 
-	@Column({ type: 'datetime', name: 'created_at' })
+	@Column({ name: 'created_at', type: 'datetime' })
 	public createdAt: Date;
 
-	@Column({ type: 'datetime', name: 'updated_at' })
+	@Column({ name: 'updated_at', type: 'datetime' })
 	public updatedAt: Date;
 
 	@ManyToOne(() => Page, (page) => page.choiceOptions)
