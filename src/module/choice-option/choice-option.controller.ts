@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChoiceOptionService } from './choice-option.service';
-import { AddChoiceOptionBody, ReorderChoiceOptionsBody, ReorderChoiceOptionsResponse, SetChoiceOptionBody } from './choice-option.dto';
+import { AddChoiceOptionBody, AddChoiceOptionItemBody, ReorderChoiceOptionsBody, ReorderChoiceOptionsResponse, SetChoiceOptionBody, SetChoiceOptionItemBody } from './choice-option.dto';
 
 @Controller('/choice-options')
 @ApiTags('ChoiceOption')
@@ -48,5 +48,38 @@ export class ChoiceOptionController {
 	) {
 		await this.choiceOptionService.removeChoiceOption(choiceOptionId);
 		return choiceOptionId;
+	}
+
+	@Post('/:choiceOptionId/items')
+	@ApiOperation({ summary: '선택지 아이템 추가' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '추가한 아이템 id' })
+	public async addChoiceOptionItem(
+		@Param('choiceOptionId', ParseIntPipe) choiceOptionId: number,
+		@Body() body: AddChoiceOptionItemBody
+	) {
+		return await this.choiceOptionService.addChoiceOptionItem(choiceOptionId, body);
+	}
+
+	@Put('/:choiceOptionId/items/:itemId')
+	@ApiOperation({ summary: '선택지 아이템 수정' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '수정한 아이템 id' })
+	public async setChoiceOptionItem(
+		@Param('itemId', ParseIntPipe) itemId: number,
+		@Param('choiceOptionId', ParseIntPipe) choiceOptionId: number,
+		@Body() { actionType }: SetChoiceOptionItemBody
+	) {
+		await this.choiceOptionService.setChoiceOptionItem(choiceOptionId, itemId, actionType);
+		return itemId;
+	}
+
+	@Delete('/:choiceOptionId/items/:itemId')
+	@ApiOperation({ summary: '선택지 아이템 삭제' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '삭제한 아이템 id' })
+	public async removeChoiceOptionItem(
+		@Param('itemId', ParseIntPipe) itemId: number,
+		@Param('choiceOptionId', ParseIntPipe) choiceOptionId: number
+	) {
+		await this.choiceOptionService.removeChoiceOptionItem(choiceOptionId, itemId);
+		return itemId;
 	}
 }

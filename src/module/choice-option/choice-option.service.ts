@@ -2,13 +2,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
 import { In } from 'typeorm';
-import { AddChoiceOptionBody, SetChoiceOptionBody } from './choice-option.dto';
+import { AddChoiceOptionBody, AddChoiceOptionItemBody, SetChoiceOptionBody } from './choice-option.dto';
+import { ChoiceOptionItemMappingRepository } from 'src/database/repository/choice-option-item-mapping.repository';
+import { ItemActionType } from 'src/database/entity/choice-option-item-mapping.entity';
+import { ItemRepository } from 'src/database/repository/item.repository';
 
 @Injectable()
 export class ChoiceOptionService {
 	constructor(
 		private readonly pageRepository: PageRepository,
-		private readonly choiceOptionRepository: ChoiceOptionRepository
+		private readonly choiceOptionRepository: ChoiceOptionRepository,
+		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository,
+		private readonly itemRepository: ItemRepository
 	) {}
 
 	public async addChoiceOption(choiceOption: AddChoiceOptionBody) {
@@ -55,5 +60,31 @@ export class ChoiceOptionService {
 		});
 
 		return await Promise.all(promises);
+	}
+
+	public async addChoiceOptionItem(choiceOptionId: number, { itemId, actionType }: AddChoiceOptionItemBody) {
+		await this.checkChoiceOptionItemExists(choiceOptionId, itemId);
+		await this.choiceOptionItemMappingRepository.insert({ choiceOptionId, itemId, actionType });
+		return itemId;
+	}
+
+	public async setChoiceOptionItem(choiceOptionId: number, itemId: number, actionType: ItemActionType) {
+		await this.checkChoiceOptionItemExists(choiceOptionId, itemId);
+		await this.choiceOptionItemMappingRepository.update({ choiceOptionId, itemId }, { actionType });
+	}
+
+	private async checkChoiceOptionItemExists(choiceOptionId: number, itemId: number) {
+		const [ choiceOptionCount, itemCount ] = await Promise.all([
+			this.choiceOptionRepository.countBy({ id: choiceOptionId }),
+			this.itemRepository.countBy({ id: itemId })
+		]);
+
+		if (!choiceOptionCount || !itemCount) {
+			throw new NotFoundException();
+		}
+	}
+
+	public async removeChoiceOptionItem(choiceOptionId: number, itemId: number) {
+		await this.choiceOptionItemMappingRepository.delete({ choiceOptionId, itemId });
 	}
 }

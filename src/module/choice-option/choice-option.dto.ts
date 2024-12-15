@@ -1,7 +1,8 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { ArrayNotEmpty, IsInt } from 'class-validator';
+import { ArrayNotEmpty, IsEnum, IsInt, Min } from 'class-validator';
 import { ChoiceOptionInfo } from './choice-option.model';
+import { ItemActionType } from 'src/database/entity/choice-option-item-mapping.entity';
 
 export class FetchChoiceOptionDto extends ChoiceOptionInfo {
 	@ApiProperty({ type: Number })
@@ -26,4 +27,21 @@ export class ReorderChoiceOptionsResponse {
 
 	@ApiProperty({ type: Number })
 	public orderNum: number;
+}
+
+export class AddChoiceOptionItemBody {
+	@ApiProperty({ type: Number, minimum: 1 })
+	@IsInt()
+	@Min(1)
+	public itemId: number;
+
+	@ApiProperty({ enum: ItemActionType, enumName: 'ItemActionType', description: '1: 획득, 2: 소모' })
+	@IsEnum(ItemActionType)
+	public actionType: ItemActionType;
+}
+
+export class SetChoiceOptionItemBody {
+	@ApiProperty({ enum: ItemActionType, enumName: 'ItemActionType', description: '1: 획득, 2: 소모' })
+	@IsEnum(ItemActionType)
+	public actionType: ItemActionType;
 }
