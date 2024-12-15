@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChoiceOptionService } from './choice-option.service';
 import { AddChoiceOptionDto, SetChoiceOptionDto } from './choice-option.dto';
@@ -28,6 +28,16 @@ export class ChoiceOptionController {
 		@Body() body: SetChoiceOptionDto
 	) {
 		await this.choiceOptionService.setChoiceOption(body, choiceOptionId);
+		return choiceOptionId;
+	}
+
+	@Delete('/:choiceOptionId')
+	@ApiOperation({ summary: '선택지 삭제' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '삭제된 choiceOption.id' })
+	public async removeChoiceOption(
+		@Param('choiceOptionId', ParseIntPipe) choiceOptionId: number
+	) {
+		await this.choiceOptionService.removeChoiceOption(choiceOptionId);
 		return choiceOptionId;
 	}
 }

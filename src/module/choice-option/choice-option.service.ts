@@ -41,4 +41,8 @@ export class ChoiceOptionService {
 			throw new NotFoundException('페이지가 존재하지 않습니다.');
 		}
 	}
+
+	public async removeChoiceOption(choiceOptionId: number) {
+		await this.choiceOptionRepository.delete({ id: choiceOptionId });
+	}
 }
