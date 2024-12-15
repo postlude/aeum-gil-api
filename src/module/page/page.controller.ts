@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FetchPageDto, SavePageDto } from './page.dto';
+import { FetchPageDto, SavePageBody } from './page.dto';
 import { PageService } from './page.service';
 
 @Controller('/pages')
@@ -14,7 +14,7 @@ export class PageController {
 	@ApiOperation({ summary: '페이지 생성' })
 	@ApiResponse({ status: HttpStatus.CREATED, type: Number, description: '생성된 page.id' })
 	public async addPage(
-		@Body() body: SavePageDto
+		@Body() body: SavePageBody
 	) {
 		const pageId = await this.pageService.savePage(body);
 		return pageId;
@@ -25,7 +25,7 @@ export class PageController {
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '수정된 page.id' })
 	public async setPage(
 		@Param('pageId', ParseIntPipe) pageId: number,
-		@Body() body: SavePageDto
+		@Body() body: SavePageBody
 	) {
 		await this.pageService.savePage(body, pageId);
 		return pageId;

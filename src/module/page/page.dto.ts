@@ -22,4 +22,4 @@ export class FetchPageDto extends PageInfo {
 	public choiceOptions: FetchChoiceOptionDto[];
 }
 
-export class SavePageDto extends PageInfo {}
+export class SavePageBody extends PageInfo {}

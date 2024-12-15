@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class PageInfo {
-	@ApiPropertyOptional({ type: String, nullable: true, description: '페이지 설명' })
+	@ApiPropertyOptional({ type: String, nullable: true, description: '페이지 설명. 유저에게 노출되지 않음' })
 	@Expose()
 	@IsOptional()
 	@IsString()
