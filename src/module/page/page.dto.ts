@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator';
-import { FetchChoiceOptionDto, SaveChoiceOptionDto } from '../choice-option/choice-option.dto';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { FetchChoiceOptionDto } from '../choice-option/choice-option.dto';
 
 export class PageDtoCommon {
 	@ApiPropertyOptional({ type: String, nullable: true, description: '페이지 설명' })
@@ -44,11 +44,4 @@ export class FetchPageDto extends PageDtoCommon {
 	public choiceOptions: FetchChoiceOptionDto[];
 }
 
-export class SavePageDto extends PageDtoCommon {
-	@ApiProperty({ type: [ SaveChoiceOptionDto ], description: '선택지' })
-	@Type(() => SaveChoiceOptionDto)
-	@IsArray()
-	@ArrayNotEmpty()
-	@ValidateNested({ each: true })
-	public choiceOptions: SaveChoiceOptionDto[];
-}
+export class SavePageDto extends PageDtoCommon {}

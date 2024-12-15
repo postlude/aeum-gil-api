@@ -25,7 +25,7 @@ export class PageController {
 	public async addPage(
 		@Body() body: SavePageDto
 	) {
-		const pageId = await this.pageService.addPage(body);
+		const pageId = await this.pageService.savePage(body);
 		return pageId;
 	}
 
@@ -36,7 +36,7 @@ export class PageController {
 		@Param('pageId', ParseIntPipe) pageId: number,
 		@Body() body: SavePageDto
 	) {
-		await this.pageService.setPage(pageId, body);
+		await this.pageService.savePage(body, pageId);
 		return pageId;
 	}
 

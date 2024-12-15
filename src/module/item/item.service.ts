@@ -25,6 +25,6 @@ export class ItemService {
 	}
 
 	public async removeItem(itemId: number) {
-		await this.itemRepository.delete({ id: itemId })
+		await this.itemRepository.delete({ id: itemId });
 	}
 }
