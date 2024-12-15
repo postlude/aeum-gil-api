@@ -10,15 +10,6 @@ export class PageController {
 		private readonly pageService: PageService
 	) {}
 
-	@Get('/:pageId')
-	@ApiOperation({ summary: '페이지 1건 조회' })
-	@ApiResponse({ status: HttpStatus.OK, type: FetchPageDto })
-	public async getPage(
-		@Param('pageId', ParseIntPipe) pageId: number
-	) {
-		return await this.pageService.getPage(pageId);
-	}
-
 	@Post('/')
 	@ApiOperation({ summary: '페이지 생성' })
 	@ApiResponse({ status: HttpStatus.CREATED, type: Number, description: '생성된 page.id' })
@@ -38,6 +29,15 @@ export class PageController {
 	) {
 		await this.pageService.savePage(body, pageId);
 		return pageId;
+	}
+
+	@Get('/:pageId')
+	@ApiOperation({ summary: '페이지 1건 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: FetchPageDto })
+	public async getPage(
+		@Param('pageId', ParseIntPipe) pageId: number
+	) {
+		return await this.pageService.getPage(pageId);
 	}
 
 	@Delete('/:pageId')
