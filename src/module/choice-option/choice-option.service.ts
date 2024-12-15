@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
 import { In } from 'typeorm';
-import { AddChoiceOptionDto, SetChoiceOptionDto } from './choice-option.dto';
+import { AddChoiceOptionBody, SetChoiceOptionBody } from './choice-option.dto';
 
 @Injectable()
 export class ChoiceOptionService {
@@ -11,7 +11,7 @@ export class ChoiceOptionService {
 		private readonly choiceOptionRepository: ChoiceOptionRepository
 	) {}
 
-	public async addChoiceOption(choiceOption: AddChoiceOptionDto) {
+	public async addChoiceOption(choiceOption: AddChoiceOptionBody) {
 		const { pageId, nextPageId, orderNum, content } = choiceOption;
 
 		const pageIds = [ pageId ];
@@ -24,7 +24,7 @@ export class ChoiceOptionService {
 		return identifiers[0].id as number;;
 	}
 
-	public async setChoiceOption(choiceOption: SetChoiceOptionDto, choiceOptionId: number) {
+	public async setChoiceOption(choiceOption: SetChoiceOptionBody, choiceOptionId: number) {
 		const { nextPageId, orderNum, content } = choiceOption;
 
 		if (nextPageId) {
@@ -44,5 +44,16 @@ export class ChoiceOptionService {
 
 	public async removeChoiceOption(choiceOptionId: number) {
 		await this.choiceOptionRepository.delete({ id: choiceOptionId });
+	}
+
+	public async reorderChoiceOptions(choiceOptionIds: number[]) {
+		const promises = choiceOptionIds.map(async (id, index) => {
+			const orderNum = index + 1;
+			await this.choiceOptionRepository.update({ id }, { orderNum });
+
+			return { choiceOptionId: id, orderNum };
+		});
+
+		return await Promise.all(promises);
 	}
 }
