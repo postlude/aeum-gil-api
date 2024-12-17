@@ -8,9 +8,13 @@ import { Page } from './entity/page.entity';
 import { PageRepository } from './repository/page.repository';
 import { ChoiceOption } from './entity/choice-option.entity';
 import { ChoiceOptionRepository } from './repository/choice-option.repository';
+import { Item } from './entity/item.entity';
+import { ChoiceOptionItemMapping } from './entity/choice-option-item-mapping.entity';
+import { ItemRepository } from './repository/item.repository';
+import { ChoiceOptionItemMappingRepository } from './repository/choice-option-item-mapping.repository';
 
-const entities = [ Page, ChoiceOption ];
-const providers = [ PageRepository, ChoiceOptionRepository ]
+const entities = [ Page, ChoiceOption, Item, ChoiceOptionItemMapping ];
+const providers = [ PageRepository, ChoiceOptionRepository, ItemRepository, ChoiceOptionItemMappingRepository ]
 	.map((repository) => ({
 		provide: repository,
 		useFactory: (dataSource: DataSource) => new repository(dataSource),

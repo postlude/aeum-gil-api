@@ -1,31 +1,19 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator';
-import { FetchChoiceOptionDto, SaveChoiceOptionDto } from '../choice-option/choice-option.dto';
+import { PageInfo } from './page.model';
+import { ChoiceOptionInfo, ChoiceOptionItemMappingInfo } from '../choice-option/choice-option.model';
 
-export class PageDtoCommon {
-	@ApiPropertyOptional({ type: String, nullable: true, description: '페이지 설명' })
+export class PageChoiceOptionItem extends ChoiceOptionItemMappingInfo {
+	@ApiProperty({ type: Date })
 	@Expose()
-	@IsOptional()
-	@IsString()
-	@IsNotEmpty()
-	public description?: string | null;
+	public createdAt: Date;
 
-	@ApiProperty({ type: String, description: '제목', maxLength: 200 })
+	@ApiProperty({ type: Date })
 	@Expose()
-	@IsString()
-	@IsNotEmpty()
-	@MaxLength(200)
-	public title: string;
-
-	@ApiProperty({ type: String, description: '본문' })
-	@Expose()
-	@IsString()
-	@IsNotEmpty()
-	public content: string;
+	public updatedAt: Date;
 }
 
-export class FetchPageDto extends PageDtoCommon {
+class PageChoiceOption extends OmitType(ChoiceOptionInfo, [ 'pageId' ]) {
 	@ApiProperty({ type: Number })
 	@Expose()
 	public id: number;
@@ -38,17 +26,29 @@ export class FetchPageDto extends PageDtoCommon {
 	@Expose()
 	public updatedAt: Date;
 
-	@ApiProperty({ type: [ FetchChoiceOptionDto ], description: '선택지' })
+	@ApiPropertyOptional({ type: [ PageChoiceOptionItem ], description: '선택지 아이템' })
 	@Expose()
-	@Type(() => FetchChoiceOptionDto)
-	public choiceOptions: FetchChoiceOptionDto[];
+	@Type(() => PageChoiceOptionItem)
+	public items?: PageChoiceOptionItem[];
 }
 
-export class SavePageDto extends PageDtoCommon {
-	@ApiProperty({ type: [ SaveChoiceOptionDto ], description: '선택지' })
-	@Type(() => SaveChoiceOptionDto)
-	@IsArray()
-	@ArrayNotEmpty()
-	@ValidateNested({ each: true })
-	public choiceOptions: SaveChoiceOptionDto[];
+export class PageDto extends PageInfo {
+	@ApiProperty({ type: Number })
+	@Expose()
+	public id: number;
+
+	@ApiProperty({ type: Date })
+	@Expose()
+	public createdAt: Date;
+
+	@ApiProperty({ type: Date })
+	@Expose()
+	public updatedAt: Date;
+
+	@ApiPropertyOptional({ type: [ PageChoiceOption ], description: '선택지' })
+	@Expose()
+	@Type(() => PageChoiceOption)
+	public choiceOptions?: PageChoiceOption[];
 }
+
+export class SavePageBody extends PageInfo {}

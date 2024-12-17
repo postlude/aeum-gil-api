@@ -27,5 +27,5 @@ export class Page {
 	public updatedAt: Date;
 
 	@OneToMany(() => ChoiceOption, (choiceOption) => choiceOption.page)
-	public choiceOptions: ChoiceOption[];
+	public choiceOptions?: ChoiceOption[];
 }
