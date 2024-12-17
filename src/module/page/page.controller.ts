@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FetchPageDto, SavePageBody } from './page.dto';
+import { GetPageResponse, SavePageBody } from './page.dto';
 import { PageService } from './page.service';
 
 @Controller('/pages')
@@ -33,7 +33,7 @@ export class PageController {
 
 	@Get('/:pageId')
 	@ApiOperation({ summary: '페이지 1건 조회' })
-	@ApiResponse({ status: HttpStatus.OK, type: FetchPageDto })
+	@ApiResponse({ status: HttpStatus.OK, type: GetPageResponse })
 	public async getPage(
 		@Param('pageId', ParseIntPipe) pageId: number
 	) {

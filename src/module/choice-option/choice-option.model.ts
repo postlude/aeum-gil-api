@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { ItemActionType } from 'src/database/entity/choice-option-item-mapping.entity';
 
 export class ChoiceOptionInfo {
 	@ApiProperty({ type: Number, nullable: true, description: '선택지가 속한 페이지 id', minimum: 1 })
@@ -28,4 +29,17 @@ export class ChoiceOptionInfo {
 	@IsNotEmpty()
 	@MaxLength(300)
 	public content: string;
+}
+
+export class ChoiceOptionItemMappingInfo {
+	@ApiProperty({ type: Number, minimum: 1 })
+	@Expose()
+	@IsInt()
+	@Min(1)
+	public itemId: number;
+
+	@ApiProperty({ enum: ItemActionType, enumName: 'ItemActionType', description: '1: 획득, 2: 소모' })
+	@Expose()
+	@IsEnum(ItemActionType)
+	public actionType: ItemActionType;
 }

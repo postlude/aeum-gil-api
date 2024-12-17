@@ -1,13 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { ChoiceOptionItemMappingRepository } from 'src/database/repository/choice-option-item-mapping.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
-import { FetchPageDto, SavePageBody } from './page.dto';
+import { In } from 'typeorm';
+import { GetPageChoiceOptionItem, GetPageResponse, SavePageBody } from './page.dto';
 import { PageInfo } from './page.model';
 
 @Injectable()
 export class PageService {
 	constructor(
-		private readonly pageRepository: PageRepository
+		private readonly pageRepository: PageRepository,
+		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository
 	) {}
 
 	public async getPage(pageId: number) {
@@ -16,7 +19,30 @@ export class PageService {
 			throw new NotFoundException();
 		}
 
-		return plainToInstance(FetchPageDto, page, { excludeExtraneousValues: true });
+		const parsed = plainToInstance(GetPageResponse, page, { excludeExtraneousValues: true });
+
+		await this.setItemMappings(parsed);
+
+		return parsed;
+	}
+
+	private async setItemMappings(parsed: GetPageResponse) {
+		const choiceOptionIds = parsed.choiceOptions?.map(({ id }) => id);
+		if (!choiceOptionIds?.length) {
+			return;
+		}
+
+		const itemMappings = await this.choiceOptionItemMappingRepository.findBy({ choiceOptionId: In(choiceOptionIds) });
+		if (!itemMappings.length) {
+			return;
+		}
+
+		parsed.choiceOptions?.forEach((choiceOption) => {
+			const filtered = itemMappings.filter(({ choiceOptionId }) => choiceOptionId === choiceOption.id);
+			if (filtered.length) {
+				choiceOption.items = plainToInstance(GetPageChoiceOptionItem, filtered, { excludeExtraneousValues: true });
+			}
+		});
 	}
 
 	public async savePage(page: SavePageBody, pageId?: number) {
