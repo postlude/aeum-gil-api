@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FetchPageDto, SavePageDto } from './page.dto';
+import { PageDto, SavePageBody } from './page.dto';
 import { PageService } from './page.service';
 
 @Controller('/pages')
@@ -10,22 +10,20 @@ export class PageController {
 		private readonly pageService: PageService
 	) {}
 
-	@Get('/:pageId')
-	@ApiOperation({ summary: '페이지 1건 조회' })
-	@ApiResponse({ status: HttpStatus.OK, type: FetchPageDto })
-	public async getPage(
-		@Param('pageId', ParseIntPipe) pageId: number
-	) {
-		return await this.pageService.getPage(pageId);
+	@Get('/')
+	@ApiOperation({ summary: '페이지 전체 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: [ PageDto ] })
+	public async getAllPages() {
+		return await this.pageService.getAllPages();
 	}
 
 	@Post('/')
 	@ApiOperation({ summary: '페이지 생성' })
 	@ApiResponse({ status: HttpStatus.CREATED, type: Number, description: '생성된 page.id' })
 	public async addPage(
-		@Body() body: SavePageDto
+		@Body() body: SavePageBody
 	) {
-		const pageId = await this.pageService.addPage(body);
+		const pageId = await this.pageService.savePage(body);
 		return pageId;
 	}
 
@@ -34,14 +32,23 @@ export class PageController {
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '수정된 page.id' })
 	public async setPage(
 		@Param('pageId', ParseIntPipe) pageId: number,
-		@Body() body: SavePageDto
+		@Body() body: SavePageBody
 	) {
-		await this.pageService.setPage(pageId, body);
+		await this.pageService.savePage(body, pageId);
 		return pageId;
 	}
 
+	@Get('/:pageId')
+	@ApiOperation({ summary: '페이지 1건 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: PageDto })
+	public async getPage(
+		@Param('pageId', ParseIntPipe) pageId: number
+	) {
+		return await this.pageService.getPage(pageId);
+	}
+
 	@Delete('/:pageId')
-	@ApiOperation({ summary: '페이지 삭제', description: '물리 삭제이므로 복구 불가' })
+	@ApiOperation({ summary: '페이지 삭제' })
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '삭제된 page.id' })
 	public async removePage(
 		@Param('pageId', ParseIntPipe) pageId: number
