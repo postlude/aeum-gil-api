@@ -2,8 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { ChoiceOptionItemMappingRepository } from 'src/database/repository/choice-option-item-mapping.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
+import { isExists } from 'src/util/validator';
 import { In } from 'typeorm';
-import { GetPageChoiceOptionItem, GetPageResponse, SavePageBody } from './page.dto';
+import { PageChoiceOptionItem, PageDto, SavePageBody } from './page.dto';
 import { PageInfo } from './page.model';
 
 @Injectable()
@@ -19,15 +20,17 @@ export class PageService {
 			throw new NotFoundException();
 		}
 
-		const parsed = plainToInstance(GetPageResponse, page, { excludeExtraneousValues: true });
+		const parsed = plainToInstance(PageDto, page, { excludeExtraneousValues: true });
 
-		await this.setItemMappings(parsed);
+		await this.setItemMappings([ parsed ]);
 
 		return parsed;
 	}
 
-	private async setItemMappings(parsed: GetPageResponse) {
-		const choiceOptionIds = parsed.choiceOptions?.map(({ id }) => id);
+	private async setItemMappings(pages: PageDto[]) {
+		const choiceOptionIds = pages.map(({ choiceOptions }) => choiceOptions?.map(({ id }) => id))
+			.flat()
+			.filter(isExists);
 		if (!choiceOptionIds?.length) {
 			return;
 		}
@@ -37,11 +40,13 @@ export class PageService {
 			return;
 		}
 
-		parsed.choiceOptions?.forEach((choiceOption) => {
-			const filtered = itemMappings.filter(({ choiceOptionId }) => choiceOptionId === choiceOption.id);
-			if (filtered.length) {
-				choiceOption.items = plainToInstance(GetPageChoiceOptionItem, filtered, { excludeExtraneousValues: true });
-			}
+		pages.forEach(({ choiceOptions }) => {
+			choiceOptions?.forEach((choiceOption) => {
+				const filtered = itemMappings.filter(({ choiceOptionId }) => choiceOptionId === choiceOption.id);
+				if (filtered.length) {
+					choiceOption.items = plainToInstance(PageChoiceOptionItem, filtered, { excludeExtraneousValues: true });
+				}
+			});
 		});
 	}
 
@@ -55,5 +60,15 @@ export class PageService {
 	public async removePage(pageId: number) {
 		// ON DELETE CASCADE 로 FK로 연결된 다른 데이터도 삭제됨
 		await this.pageRepository.delete({ id: pageId });
+	}
+
+	public async getAllPages() {
+		const pages = await this.pageRepository.findAllWithChoiceOptions();
+
+		const parsed = plainToInstance(PageDto, pages, { excludeExtraneousValues: true });
+
+		await this.setItemMappings(parsed);
+
+		return parsed;
 	}
 }

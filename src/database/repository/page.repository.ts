@@ -16,4 +16,13 @@ export class PageRepository extends Repository<Page> {
 			.orderBy('co.orderNum', 'ASC')
 			.getOne();
 	}
+
+	public async findAllWithChoiceOptions() {
+		return await this.createQueryBuilder('p')
+			.comment('PageRepository.findAllWithChoiceOptions')
+			.leftJoinAndSelect('p.choiceOptions', 'co')
+			.orderBy('p.id', 'ASC')
+			.addOrderBy('co.orderNum', 'ASC')
+			.getMany();
+	}
 }

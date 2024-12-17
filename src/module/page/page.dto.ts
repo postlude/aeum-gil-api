@@ -3,7 +3,7 @@ import { Expose, Type } from 'class-transformer';
 import { PageInfo } from './page.model';
 import { ChoiceOptionInfo, ChoiceOptionItemMappingInfo } from '../choice-option/choice-option.model';
 
-export class GetPageChoiceOptionItem extends ChoiceOptionItemMappingInfo {
+export class PageChoiceOptionItem extends ChoiceOptionItemMappingInfo {
 	@ApiProperty({ type: Date })
 	@Expose()
 	public createdAt: Date;
@@ -13,7 +13,7 @@ export class GetPageChoiceOptionItem extends ChoiceOptionItemMappingInfo {
 	public updatedAt: Date;
 }
 
-class GetPageChoiceOption extends OmitType(ChoiceOptionInfo, [ 'pageId' ]) {
+class PageChoiceOption extends OmitType(ChoiceOptionInfo, [ 'pageId' ]) {
 	@ApiProperty({ type: Number })
 	@Expose()
 	public id: number;
@@ -26,13 +26,13 @@ class GetPageChoiceOption extends OmitType(ChoiceOptionInfo, [ 'pageId' ]) {
 	@Expose()
 	public updatedAt: Date;
 
-	@ApiPropertyOptional({ type: [ GetPageChoiceOptionItem ], description: '선택지 아이템' })
+	@ApiPropertyOptional({ type: [ PageChoiceOptionItem ], description: '선택지 아이템' })
 	@Expose()
-	@Type(() => GetPageChoiceOption)
-	public items?: GetPageChoiceOptionItem[];
+	@Type(() => PageChoiceOptionItem)
+	public items?: PageChoiceOptionItem[];
 }
 
-export class GetPageResponse extends PageInfo {
+export class PageDto extends PageInfo {
 	@ApiProperty({ type: Number })
 	@Expose()
 	public id: number;
@@ -45,10 +45,10 @@ export class GetPageResponse extends PageInfo {
 	@Expose()
 	public updatedAt: Date;
 
-	@ApiPropertyOptional({ type: [ GetPageChoiceOption ], description: '선택지' })
+	@ApiPropertyOptional({ type: [ PageChoiceOption ], description: '선택지' })
 	@Expose()
-	@Type(() => GetPageChoiceOption)
-	public choiceOptions?: GetPageChoiceOption[];
+	@Type(() => PageChoiceOption)
+	public choiceOptions?: PageChoiceOption[];
 }
 
 export class SavePageBody extends PageInfo {}
