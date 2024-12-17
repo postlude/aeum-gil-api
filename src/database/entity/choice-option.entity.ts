@@ -33,5 +33,5 @@ export class ChoiceOption {
 
 	@ManyToOne(() => Page, (page) => page.choiceOptions)
 	@JoinColumn({ name: 'page_id' })
-	public page: Relation<Page>;
+	public page?: Relation<Page>;
 }
