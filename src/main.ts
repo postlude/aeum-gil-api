@@ -29,7 +29,7 @@ async function bootstrap() {
 	const mysqlHost = app.get(ConfigService<MySqlConfig>)
 		.get('MYSQL_HOST', { infer: true });
 
-	console.log('[AEUM-GIL API]');
+	console.log('========== [AEUM-GIL API] ==========');
 	console.log(`PORT : ${port}`);
 	console.log(`MySQL Host : ${mysqlHost}`);
 }
