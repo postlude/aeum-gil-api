@@ -9,7 +9,8 @@
 		"noImplicitAny": true,
 		"emitDecoratorMetadata": true,
 		"strict": true,
-		"strictPropertyInitialization": false
+		"strictPropertyInitialization": false,
+		"esModuleInterop": true
 		// "allowSyntheticDefaultImports": true,
 		// "sourceMap": true,
 		// "declaration": true,
