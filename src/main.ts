@@ -17,7 +17,7 @@ async function bootstrap() {
 
 	const swaggerConfig = new DocumentBuilder()
 		.setTitle('에움길 API')
-		.setVersion('0.5.0')
+		.setVersion('0.6.0')
 		.build();
 	const document = SwaggerModule.createDocument(app, swaggerConfig, {
 		operationIdFactory: (controllerKey: string, methodKey: string) => methodKey
@@ -29,7 +29,7 @@ async function bootstrap() {
 	const mysqlHost = app.get(ConfigService<MySqlConfig>)
 		.get('MYSQL_HOST', { infer: true });
 
-	console.log('[AEUM-GIL API]');
+	console.log('========== [AEUM-GIL API] ==========');
 	console.log(`PORT : ${port}`);
 	console.log(`MySQL Host : ${mysqlHost}`);
 }

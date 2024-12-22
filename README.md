@@ -6,6 +6,7 @@
 
 ## 로컬 실행
 - local.env 파일 참조
+  - /files/presigned-url GET api를 로컬에서 사용하기 위해선 .env에 aws key 설정 필요
 - `yarn start:dev` 실행
 - localhost:3000 으로 api 호출
 
