@@ -6,6 +6,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ChoiceOptionModule } from './module/choice-option/choice-option.module';
 import { ItemModule } from './module/item/item.module';
+import { FileModule } from './module/file/file.module';
 
 @Module({
 	imports: [
@@ -17,7 +18,8 @@ import { ItemModule } from './module/item/item.module';
 		DatabaseModule,
 		PageModule,
 		ChoiceOptionModule,
-		ItemModule
+		ItemModule,
+		FileModule
 	],
 	controllers: [ AppController ],
 	providers: [
