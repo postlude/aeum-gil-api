@@ -36,7 +36,7 @@ export class ChoiceOptionService {
 			await this.checkPageExists([ nextPageId ]);
 		}
 
-		await this.choiceOptionRepository.update({ id: choiceOptionId }, { orderNum, content });
+		await this.choiceOptionRepository.update({ id: choiceOptionId }, { nextPageId, orderNum, content });
 		return choiceOptionId;
 	}
 
