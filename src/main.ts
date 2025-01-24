@@ -12,7 +12,7 @@ async function bootstrap() {
 	const port = 3000;
 
 	app.enableCors({
-		origin: [ /localhost/ ]
+		origin: [ /localhost/, /aeum-gil.com/ ]
 	});
 
 	const swaggerConfig = new DocumentBuilder()
