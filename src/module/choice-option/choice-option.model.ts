@@ -11,7 +11,7 @@ export class ChoiceOptionInfo {
 	@Min(1)
 	public pageId: number;
 
-	@ApiPropertyOptional({ enum: MoveTargetType, enumName: 'MoveTargetType', description: '선택지 선택시 이동할 대상(1: 페이지, 2: 엔딩)' })
+	@ApiPropertyOptional({ enum: MoveTargetType, enumName: 'MoveTargetType', nullable: true, description: '선택지 선택시 이동할 대상(1: 페이지, 2: 엔딩)' })
 	@Expose()
 	@IsOptional()
 	@IsEnum(MoveTargetType)
