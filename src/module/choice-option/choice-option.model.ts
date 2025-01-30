@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { ItemActionType } from 'src/database/entity/choice-option-item-mapping.entity';
+import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 
 export class ChoiceOptionInfo {
 	@ApiProperty({ type: Number, nullable: true, description: '선택지가 속한 페이지 id', minimum: 1 })
@@ -10,12 +11,18 @@ export class ChoiceOptionInfo {
 	@Min(1)
 	public pageId: number;
 
-	@ApiPropertyOptional({ type: Number, nullable: true, description: '선택지 선택시 이동할 다음 페이지 id', minimum: 1 })
+	@ApiPropertyOptional({ enum: MoveTargetType, enumName: 'MoveTargetType', description: '선택지 선택시 이동할 대상(1: 페이지, 2: 엔딩)' })
+	@Expose()
+	@IsOptional()
+	@IsEnum(MoveTargetType)
+	public moveTargetType?: MoveTargetType | null;
+
+	@ApiPropertyOptional({ type: Number, nullable: true, description: '다음 페이지 id or 엔딩 id', minimum: 1 })
 	@Expose()
 	@IsOptional()
 	@IsInt()
 	@Min(1)
-	public nextPageId?: number | null;
+	public targetId?: number | null;
 
 	@ApiProperty({ type: Number, description: '선택지 순서', minimum: 1 })
 	@Expose()
