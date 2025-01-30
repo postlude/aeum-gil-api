@@ -8,9 +8,9 @@ export class PageRepository extends Repository<Page> {
 		super(Page, dataSource.createEntityManager());
 	}
 
-	public async findWithChoiceOptions(pageId: number) {
+	public async findOneWithChoiceOptions(pageId: number) {
 		return await this.createQueryBuilder('p')
-			.comment('PageRepository.findWithChoiceOptions')
+			.comment('PageRepository.findOneWithChoiceOptions')
 			.leftJoinAndSelect('p.choiceOptions', 'co')
 			.where('p.id = :pageId', { pageId })
 			.orderBy('co.orderNum', 'ASC')

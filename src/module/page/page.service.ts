@@ -19,7 +19,7 @@ export class PageService {
 	) {}
 
 	public async getPage(pageId: number) {
-		const page = await this.pageRepository.findWithChoiceOptions(pageId);
+		const page = await this.pageRepository.findOneWithChoiceOptions(pageId);
 		if (!page) {
 			throw new NotFoundException();
 		}
