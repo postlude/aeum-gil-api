@@ -4,11 +4,15 @@ import { EndingDto, SaveEndingBody } from './ending.dto';
 import { plainToInstance } from 'class-transformer';
 import { EndingInfo } from './ending.model';
 import { Not } from 'typeorm';
+import { Transactional } from 'typeorm-transactional';
+import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
+import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 
 @Injectable()
 export class EndingService {
 	constructor(
-		private readonly endingRepository: EndingRepository
+		private readonly endingRepository: EndingRepository,
+		private readonly choiceOptionRepository: ChoiceOptionRepository
 	) {}
 
 	public async saveEnding(ending: SaveEndingBody, endingId?: number) {
@@ -38,5 +42,25 @@ export class EndingService {
 		});
 
 		return plainToInstance(EndingDto, endings, { excludeExtraneousValues: true });
+	}
+
+	@Transactional()
+	public async removeEnding(endingId: number) {
+		const results = await Promise.allSettled([
+			this.endingRepository.delete({ id: endingId }),
+			this.choiceOptionRepository.update({
+				moveTargetType: MoveTargetType.Ending,
+				targetId: endingId
+			}, {
+				moveTargetType: null,
+				targetId: null
+			})
+		]);
+
+		results.forEach((result) => {
+			if (result.status === 'rejected') {
+				throw result.reason;
+			}
+		});
 	}
 }

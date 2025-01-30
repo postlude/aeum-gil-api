@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EndingService } from './ending.service';
 import { EndingDto, SaveEndingBody } from './ending.dto';
@@ -35,6 +35,16 @@ export class EndingController {
 		@Body() body: SaveEndingBody
 	) {
 		await this.endingService.saveEnding(body, endingId);
+		return endingId;
+	}
+
+	@Delete('/:endingId')
+	@ApiOperation({ summary: '엔딩 삭제' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '삭제된 ending.id' })
+	public async removeEnding(
+		@Param('endingId', ParseIntPipe) endingId: number
+	) {
+		await this.endingService.removeEnding(endingId);
 		return endingId;
 	}
 }
