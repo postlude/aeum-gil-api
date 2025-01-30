@@ -6,16 +6,20 @@ import { isExists } from 'src/util/validator';
 import { In } from 'typeorm';
 import { PageChoiceOptionItem, PageDto, SavePageBody } from './page.dto';
 import { PageInfo } from './page.model';
+import { Transactional } from 'typeorm-transactional';
+import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
+import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 
 @Injectable()
 export class PageService {
 	constructor(
 		private readonly pageRepository: PageRepository,
+		private readonly choiceOptionRepository: ChoiceOptionRepository,
 		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository
 	) {}
 
 	public async getPage(pageId: number) {
-		const page = await this.pageRepository.findWithChoiceOptions(pageId);
+		const page = await this.pageRepository.findOneWithChoiceOptions(pageId);
 		if (!page) {
 			throw new NotFoundException();
 		}
@@ -57,9 +61,24 @@ export class PageService {
 		return result.id;
 	}
 
+	@Transactional()
 	public async removePage(pageId: number) {
-		// ON DELETE CASCADE 로 FK로 연결된 다른 데이터도 삭제됨
-		await this.pageRepository.delete({ id: pageId });
+		const results = await Promise.allSettled([
+			this.pageRepository.delete({ id: pageId }), // ON DELETE CASCADE 로 FK로 연결된 다른 데이터도 삭제됨
+			this.choiceOptionRepository.update({
+				moveTargetType: MoveTargetType.Page,
+				targetId: pageId
+			}, {
+				moveTargetType: null,
+				targetId: null
+			})
+		]);
+
+		results.forEach((result) => {
+			if (result.status === 'rejected') {
+				throw result.reason;
+			}
+		});
 	}
 
 	public async getAllPages() {

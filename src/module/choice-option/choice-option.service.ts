@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
 import { In } from 'typeorm';
@@ -6,6 +6,8 @@ import { AddChoiceOptionBody, AddChoiceOptionItemBody, SetChoiceOptionBody } fro
 import { ChoiceOptionItemMappingRepository } from 'src/database/repository/choice-option-item-mapping.repository';
 import { ItemActionType } from 'src/database/entity/choice-option-item-mapping.entity';
 import { ItemRepository } from 'src/database/repository/item.repository';
+import { MoveTargetType } from 'src/database/entity/choice-option.entity';
+import { EndingRepository } from 'src/database/repository/ending.repository';
 
 @Injectable()
 export class ChoiceOptionService {
@@ -13,37 +15,76 @@ export class ChoiceOptionService {
 		private readonly pageRepository: PageRepository,
 		private readonly choiceOptionRepository: ChoiceOptionRepository,
 		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository,
-		private readonly itemRepository: ItemRepository
+		private readonly itemRepository: ItemRepository,
+		private readonly endingRepository: EndingRepository
 	) {}
 
 	public async addChoiceOption(choiceOption: AddChoiceOptionBody) {
-		const { pageId, nextPageId, orderNum, content } = choiceOption;
+		const { pageId, moveTargetType, targetId, orderNum, content } = choiceOption;
 
-		const pageIds = [ pageId ];
-		if (nextPageId) {
-			pageIds.push(nextPageId);
-		}
-		await this.checkPageExists(pageIds);
+		await this.checkPageEndingExists({
+			type: 'insert',
+			pageId,
+			moveTargetType,
+			targetId
+		});
 
-		const { identifiers } = await this.choiceOptionRepository.insert({ pageId, nextPageId, orderNum, content });
-		return identifiers[0].id as number;;
+		const { identifiers } = await this.choiceOptionRepository.insert({ pageId, moveTargetType, targetId, orderNum, content });
+		return identifiers[0].id as number;
 	}
 
-	public async setChoiceOption(choiceOption: SetChoiceOptionBody, choiceOptionId: number) {
-		const { nextPageId, orderNum, content } = choiceOption;
+	public async setChoiceOption(setInfo: SetChoiceOptionBody, choiceOptionId: number) {
+		const { moveTargetType, targetId, orderNum, content } = setInfo;
 
-		if (nextPageId) {
-			await this.checkPageExists([ nextPageId ]);
+		const choiceOption = await this.choiceOptionRepository.findOneBy({ id: choiceOptionId });
+		if (!choiceOption) {
+			throw new NotFoundException('선택지가 없습니다.');
 		}
 
-		await this.choiceOptionRepository.update({ id: choiceOptionId }, { nextPageId, orderNum, content });
+		await this.checkPageEndingExists({
+			type: 'update',
+			pageId: choiceOption.pageId,
+			moveTargetType,
+			targetId
+		});
+
+		await this.choiceOptionRepository.update({ id: choiceOptionId }, { moveTargetType, targetId, orderNum, content });
 		return choiceOptionId;
 	}
 
-	private async checkPageExists(pageIds: number[]) {
-		const counts = await this.pageRepository.countBy({ id: In(pageIds) });
-		if (pageIds.length !== counts) {
+	private async checkPageEndingExists(params: {
+		type: 'insert' | 'update'
+		pageId: number
+		moveTargetType?: MoveTargetType | null
+		targetId?: number | null
+	}) {
+		const { type, pageId, moveTargetType, targetId } = params;
+
+		const pageIds: number[] = type === 'insert' ? [ pageId ] : [];
+		let endingId: number | undefined = undefined;
+
+		if (targetId) {
+			if (moveTargetType === MoveTargetType.Page) {
+				if (targetId === pageId) {
+					throw new BadRequestException('현재 페이지를 다음 페이지로 지정할 수 없습니다.');
+				}
+				pageIds.push(targetId);
+			} else if (moveTargetType === MoveTargetType.Ending) {
+				endingId = targetId;
+			}
+		}
+
+		const [ pageCount, endingCount ] = await Promise.all([
+			pageIds.length ? this.pageRepository.countBy({ id: In(pageIds) }) : null,
+			endingId ? this.endingRepository.countBy({ id: endingId }) : null
+		]);
+
+		if (pageIds.length && pageIds.length !== pageCount) {
 			throw new NotFoundException('페이지가 존재하지 않습니다.');
+		}
+
+		if (endingId && endingCount !== 1) {
+			throw new NotFoundException('엔딩이 존재하지 않습니다.');
 		}
 	}
 
