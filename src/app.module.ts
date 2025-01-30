@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ChoiceOptionModule } from './module/choice-option/choice-option.module';
 import { ItemModule } from './module/item/item.module';
 import { FileModule } from './module/file/file.module';
+import { EndingModule } from './module/ending/ending.module';
 
 @Module({
 	imports: [
@@ -19,7 +20,8 @@ import { FileModule } from './module/file/file.module';
 		PageModule,
 		ChoiceOptionModule,
 		ItemModule,
-		FileModule
+		FileModule,
+		EndingModule
 	],
 	controllers: [ AppController ],
 	providers: [
