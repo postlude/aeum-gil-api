@@ -8,6 +8,14 @@ import {
 } from 'typeorm';
 import { Page } from './page.entity';
 
+/**
+ * 선택지 선택시 이동할 대상
+ */
+export enum MoveTargetType {
+	Page = 1,
+	Ending
+}
+
 @Entity({ database: 'aeum_gil', name: 'choice_option', comment: '선택지' })
 export class ChoiceOption {
 	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
@@ -16,8 +24,11 @@ export class ChoiceOption {
 	@Column({ name: 'page_id', type: 'int', unsigned: true, comment: '선택지가 속한 페이지 id' })
 	public pageId: number;
 
-	@Column({ name: 'next_page_id', type: 'int', unsigned: true, nullable: true, comment: '선택지 선택시 이동할 다음 페이지 id' })
-	public nextPageId: number | null;
+	@Column({ name: 'move_target_type', type: 'tinyint', unsigned: true, comment: '1: 페이지, 2: 엔딩' })
+	public moveTargetType: MoveTargetType | null;
+
+	@Column({ name: 'target_id', type: 'int', unsigned: true, nullable: true, comment: '다음 페이지 id or 엔딩 id' })
+	public targetId: number | null;
 
 	@Column({ name: 'order_num', type: 'tinyint', unsigned: true, comment: '선택지 순서' })
 	public orderNum: number;
