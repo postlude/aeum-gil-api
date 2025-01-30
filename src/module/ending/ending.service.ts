@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { EndingRepository } from 'src/database/repository/ending.repository';
-import { SaveEndingBody } from './ending.dto';
+import { EndingDto, SaveEndingBody } from './ending.dto';
 import { plainToInstance } from 'class-transformer';
 import { EndingInfo } from './ending.model';
 import { Not } from 'typeorm';
@@ -28,5 +28,15 @@ export class EndingService {
 		const parsed = plainToInstance(EndingInfo, ending, { excludeExtraneousValues: true });
 		const result = await this.endingRepository.save({ ...parsed, id: endingId });
 		return result.id;
+	}
+
+	public async getAllEndings() {
+		const endings = await this.endingRepository.find({
+			order: {
+				orderNum: 'ASC'
+			}
+		});
+
+		return plainToInstance(EndingDto, endings, { excludeExtraneousValues: true });
 	}
 }
