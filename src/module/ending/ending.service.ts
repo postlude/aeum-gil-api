@@ -3,6 +3,7 @@ import { EndingRepository } from 'src/database/repository/ending.repository';
 import { SaveEndingBody } from './ending.dto';
 import { plainToInstance } from 'class-transformer';
 import { EndingInfo } from './ending.model';
+import { Not } from 'typeorm';
 
 @Injectable()
 export class EndingService {
@@ -11,7 +12,14 @@ export class EndingService {
 	) {}
 
 	public async saveEnding(ending: SaveEndingBody, endingId?: number) {
-		const count = await this.endingRepository.countBy({ orderNum: ending.orderNum });
+		const where = endingId ? {
+			orderNum: ending.orderNum,
+			id: Not(endingId)
+		} : {
+			orderNum: ending.orderNum
+		};
+
+		const count = await this.endingRepository.countBy(where);
 		if (count) {
 			throw new ConflictException('엔딩 순서는 중복될 수 없습니다.');
 		}
