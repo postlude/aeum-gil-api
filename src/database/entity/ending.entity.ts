@@ -9,11 +9,11 @@ export class Ending {
 	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
 	public id: number;
 
-	@Column({ type: 'varchar', length: 300, nullable: true, comment: '설명' })
-	public description: string | null;
-
 	@Column({ type: 'varchar', length: 200, comment: '제목' })
 	public title: string;
+
+	@Column({ type: 'varchar', length: 300, comment: '설명' })
+	public description: string;
 
 	@Column({ type: 'text', comment: '본문' })
 	public content: string;
