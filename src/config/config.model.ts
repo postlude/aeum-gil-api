@@ -10,3 +10,7 @@ export interface AWSConfig {
 	AWS_ACCESS_KEY_ID: string
 	AWS_SECRET_ACCESS_KEY: string
 }
+
+export interface DiscordWebhook {
+	WEBHOOK_URL: string
+}
