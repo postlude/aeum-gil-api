@@ -17,6 +17,13 @@ export class PageInfo {
 	@MaxLength(200)
 	public title: string;
 
+	@ApiProperty({ type: String, description: '장소', maxLength: 30 })
+	@Expose()
+	@IsString()
+	@IsNotEmpty()
+	@MaxLength(30)
+	public place: string;
+
 	@ApiProperty({ type: String, description: '본문' })
 	@Expose()
 	@IsString()

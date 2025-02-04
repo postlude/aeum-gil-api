@@ -17,6 +17,9 @@ export class Page {
 	@Column({ type: 'varchar', length: 200, comment: '제목' })
 	public title: string;
 
+	@Column({ type: 'varchar', length: 30, comment: '장소' })
+	public place: string;
+
 	@Column({ type: 'text', comment: '본문' })
 	public content: string;
 
