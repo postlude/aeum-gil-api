@@ -1,7 +1,7 @@
-import { Body, Controller, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChapterService } from './chapter.service';
-import { SaveChapterDto } from './chapter.dto';
+import { ChapterDto, SaveChapterDto } from './chapter.dto';
 
 @Controller('/chapters')
 @ApiTags('Chapter')
@@ -9,6 +9,13 @@ export class ChapterController {
 	constructor(
 		private readonly chapterService: ChapterService
 	) {}
+
+	@Get('/')
+	@ApiOperation({ summary: '챕터 전체 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: [ ChapterDto ] })
+	public async getAllChapters() {
+		return await this.chapterService.getAllChapters();
+	}
 
 	@Post('/')
 	@ApiOperation({ summary: '챕터 신규 추가' })

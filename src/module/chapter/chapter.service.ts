@@ -14,4 +14,8 @@ export class ChapterService {
 		});
 		return result.id;
 	}
+
+	public async getAllChapters() {
+		return await this.chapterRepository.find();
+	}
 }
