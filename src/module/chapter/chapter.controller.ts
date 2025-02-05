@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChapterService } from './chapter.service';
 import { ChapterDto, SaveChapterDto } from './chapter.dto';
@@ -35,6 +35,16 @@ export class ChapterController {
 		@Body() { title }: SaveChapterDto
 	) {
 		await this.chapterService.saveChapter(title, chapterId);
+		return chapterId;
+	}
+
+	@Delete('/:chapterId')
+	@ApiOperation({ summary: '챕터 삭제' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '삭제된 chapter.id' })
+	public async removeChapter(
+		@Param('chapterId', ParseIntPipe) chapterId: number
+	) {
+		await this.chapterService.removeChapter(chapterId);
 		return chapterId;
 	}
 }
