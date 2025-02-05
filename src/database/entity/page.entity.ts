@@ -11,6 +11,9 @@ export class Page {
 	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
 	public id: number;
 
+	@Column({ name: 'chapter_id', type: 'int', unsigned: true, nullable: true })
+	public chapterId: number | null;
+
 	@Column({ type: 'varchar', length: 300, nullable: true, comment: '페이지 설명' })
 	public description: string | null;
 
