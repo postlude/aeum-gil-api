@@ -9,13 +9,15 @@ import { PageInfo } from './page.model';
 import { Transactional } from 'typeorm-transactional';
 import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
 import { MoveTargetType } from 'src/database/entity/choice-option.entity';
+import { ChapterRepository } from 'src/database/repository/chapter.repository';
 
 @Injectable()
 export class PageService {
 	constructor(
 		private readonly pageRepository: PageRepository,
 		private readonly choiceOptionRepository: ChoiceOptionRepository,
-		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository
+		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository,
+		private readonly chapterRepository: ChapterRepository
 	) {}
 
 	public async getPage(pageId: number) {
@@ -55,6 +57,13 @@ export class PageService {
 	}
 
 	public async savePage(page: SavePageBody, pageId?: number) {
+		if (page.chapterId) {
+			const count = await this.chapterRepository.countBy({ id: page.chapterId });
+			if (!count) {
+				throw new NotFoundException('존재하지 않는 챕터 id입니다.');
+			}
+		}
+
 		// 혹시라도 type에 정의되어 있지 않지만, fe에서 값이 전달될 경우를 대비해 선언되지 않은 값들을 제거
 		const parsed = plainToInstance(PageInfo, page, { excludeExtraneousValues: true });
 		const result = await this.pageRepository.save({ ...parsed, id: pageId });
