@@ -14,9 +14,11 @@ import { ItemRepository } from './repository/item.repository';
 import { ChoiceOptionItemMappingRepository } from './repository/choice-option-item-mapping.repository';
 import { Ending } from './entity/ending.entity';
 import { EndingRepository } from './repository/ending.repository';
+import { Chapter } from './entity/chapter.entity';
+import { ChapterRepository } from './repository/chapter.repository';
 
-const entities = [ Page, ChoiceOption, Item, ChoiceOptionItemMapping, Ending ];
-const providers = [ PageRepository, ChoiceOptionRepository, ItemRepository, ChoiceOptionItemMappingRepository, EndingRepository ]
+const entities = [ Chapter, Page, ChoiceOption, Item, ChoiceOptionItemMapping, Ending ];
+const providers = [ ChapterRepository, PageRepository, ChoiceOptionRepository, ItemRepository, ChoiceOptionItemMappingRepository, EndingRepository ]
 	.map((repository) => ({
 		provide: repository,
 		useFactory: (dataSource: DataSource) => new repository(dataSource),

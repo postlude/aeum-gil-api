@@ -10,6 +10,7 @@ import { FileModule } from './module/file/file.module';
 import { EndingModule } from './module/ending/ending.module';
 import { ErrorInterceptor } from './core/error.interceptor';
 import { DiscordService } from './util/discord.service';
+import { ChapterModule } from './module/chapter/chapter.module';
 
 @Module({
 	imports: [
@@ -23,7 +24,8 @@ import { DiscordService } from './util/discord.service';
 		ChoiceOptionModule,
 		ItemModule,
 		FileModule,
-		EndingModule
+		EndingModule,
+		ChapterModule
 	],
 	controllers: [ AppController ],
 	providers: [
