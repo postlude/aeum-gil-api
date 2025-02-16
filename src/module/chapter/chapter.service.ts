@@ -10,9 +10,16 @@ export class ChapterService {
 		private readonly pageRepository: PageRepository
 	) {}
 
-	public async saveChapter(title: string, chapterId?: number) {
+	public async saveChapter(params: {
+		title: string,
+		image: string,
+		chapterId?: number
+	}) {
+		const { title, image, chapterId } = params;
+
 		const result = await this.chapterRepository.save({
 			title,
+			image,
 			id: chapterId
 		});
 		return result.id;
