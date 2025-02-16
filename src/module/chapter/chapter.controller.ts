@@ -21,9 +21,9 @@ export class ChapterController {
 	@ApiOperation({ summary: '챕터 신규 추가' })
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '생성된 chapter.id' })
 	public async addChapter(
-		@Body() { title }: SaveChapterDto
+		@Body() { title, image }: SaveChapterDto
 	) {
-		const chapterId = await this.chapterService.saveChapter(title);
+		const chapterId = await this.chapterService.saveChapter({ title, image });
 		return chapterId;
 	}
 
@@ -32,9 +32,9 @@ export class ChapterController {
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '수정된 chapter.id' })
 	public async setChapter(
 		@Param('chapterId', ParseIntPipe) chapterId: number,
-		@Body() { title }: SaveChapterDto
+		@Body() { title, image }: SaveChapterDto
 	) {
-		await this.chapterService.saveChapter(title, chapterId);
+		await this.chapterService.saveChapter({ title, image, chapterId });
 		return chapterId;
 	}
 

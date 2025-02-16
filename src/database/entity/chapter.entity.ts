@@ -12,6 +12,9 @@ export class Chapter {
 	@Column({ type: 'varchar', length: 200, comment: '챕터 제목' })
 	public title: string;
 
+	@Column({ type: 'varchar', length: 400, comment: '배경 이미지' })
+	public image: string;
+
 	@Column({ name: 'created_at', type: 'datetime' })
 	public createdAt: Date;
 
