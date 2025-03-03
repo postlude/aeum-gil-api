@@ -20,4 +20,15 @@ export class AuthController {
 		const userId = await this.authService.signUp(name, password);
 		return userId;
 	}
+
+	@Post('/sign-in')
+	@ApiOperation({ summary: '로그인' })
+	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '로그인 성공' })
+	@ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: '로그인 실패(이름이 없거나 비번 불일치)' })
+	public async signIn(
+		@Body() { name, password }: AuthDto
+	) {
+		const userId = await this.authService.signIn(name, password);
+		return userId;
+	}
 }
