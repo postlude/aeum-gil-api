@@ -11,6 +11,7 @@ import { EndingModule } from './module/ending/ending.module';
 import { ErrorInterceptor } from './core/error.interceptor';
 import { DiscordService } from './util/discord.service';
 import { ChapterModule } from './module/chapter/chapter.module';
+import { AuthModule } from './module/auth/auth.module';
 
 @Module({
 	imports: [
@@ -25,7 +26,8 @@ import { ChapterModule } from './module/chapter/chapter.module';
 		ItemModule,
 		FileModule,
 		EndingModule,
-		ChapterModule
+		ChapterModule,
+		AuthModule
 	],
 	controllers: [ AppController ],
 	providers: [
