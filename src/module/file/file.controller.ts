@@ -1,10 +1,13 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetPresignedUrlRequest } from './file.dto';
 import { FileService } from './file.service';
+import { AdminOnly } from '../auth/jwt/admin-only.guard';
 
 @Controller('/files')
+@UseGuards(AdminOnly)
 @ApiTags('File')
+@ApiBearerAuth()
 export class FileController {
 	constructor(
 		private readonly fileService: FileService

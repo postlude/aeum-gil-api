@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChoiceOptionService } from './choice-option.service';
 import { AddChoiceOptionBody, AddChoiceOptionItemBody, ReorderChoiceOptionsBody, ReorderChoiceOptionsResponse, SetChoiceOptionBody, SetChoiceOptionItemBody } from './choice-option.dto';
+import { AdminOnly } from '../auth/jwt/admin-only.guard';
 
 @Controller('/choice-options')
+@UseGuards(AdminOnly)
 @ApiTags('ChoiceOption')
+@ApiBearerAuth()
 export class ChoiceOptionController {
 	constructor(
 		private readonly choiceOptionService: ChoiceOptionService
