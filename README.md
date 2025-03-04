@@ -98,6 +98,6 @@
 		password   varchar(500)                       not null,
 		created_at datetime default (now())           not null,
 		updated_at datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
-		constraint user_name_uindex unique (name)
+		constraint user_uq unique (name)
 	) comment '유저';
 </details>
