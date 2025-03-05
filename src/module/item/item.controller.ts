@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ItemService } from './item.service';
 import { FetchItemDto, SaveItemDto } from './item.dto';
+import { AdminOnly } from '../auth/jwt/admin-only.guard';
 
 @Controller('/items')
+@UseGuards(AdminOnly)
 @ApiTags('Item')
+@ApiBearerAuth()
 export class ItemController {
 	constructor(
 		private readonly itemService: ItemService

@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AdminOnly } from '../auth/jwt/admin-only.guard';
 import { PageDto, SavePageBody } from './page.dto';
 import { PageService } from './page.service';
 
 @Controller('/pages')
+@UseGuards(AdminOnly)
 @ApiTags('Page')
+@ApiBearerAuth()
 export class PageController {
 	constructor(
 		private readonly pageService: PageService
