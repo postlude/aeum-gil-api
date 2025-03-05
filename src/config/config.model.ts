@@ -14,3 +14,9 @@ export interface AWSConfig {
 export interface DiscordWebhook {
 	WEBHOOK_URL: string
 }
+
+export interface JwtConfig {
+	JWT_SECRET: string
+}
+
+export const JwtExpiration = '1d';

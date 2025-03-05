@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChapterService } from './chapter.service';
 import { ChapterDto, SaveChapterDto } from './chapter.dto';
+import { AdminOnly } from '../auth/jwt/admin-only.guard';
 
 @Controller('/chapters')
+@UseGuards(AdminOnly)
 @ApiTags('Chapter')
+@ApiBearerAuth()
 export class ChapterController {
 	constructor(
 		private readonly chapterService: ChapterService

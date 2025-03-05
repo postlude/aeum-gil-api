@@ -16,14 +16,23 @@ import { Ending } from './entity/ending.entity';
 import { EndingRepository } from './repository/ending.repository';
 import { Chapter } from './entity/chapter.entity';
 import { ChapterRepository } from './repository/chapter.repository';
+import { User } from './entity/user.entity';
+import { UserRepository } from './repository/user.repository';
 
-const entities = [ Chapter, Page, ChoiceOption, Item, ChoiceOptionItemMapping, Ending ];
-const providers = [ ChapterRepository, PageRepository, ChoiceOptionRepository, ItemRepository, ChoiceOptionItemMappingRepository, EndingRepository ]
-	.map((repository) => ({
-		provide: repository,
-		useFactory: (dataSource: DataSource) => new repository(dataSource),
-		inject: [ DataSource ]
-	}));
+const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User ];
+const providers = [
+	ChapterRepository,
+	ChoiceOptionItemMappingRepository,
+	ChoiceOptionRepository,
+	EndingRepository,
+	ItemRepository,
+	PageRepository,
+	UserRepository
+].map((repository) => ({
+	provide: repository,
+	useFactory: (dataSource: DataSource) => new repository(dataSource),
+	inject: [ DataSource ]
+}));
 
 @Global()
 @Module({
