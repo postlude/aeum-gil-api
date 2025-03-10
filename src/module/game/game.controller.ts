@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SignInRequired } from '../auth/jwt/sign-in-required.guard';
 import { GameService } from './game.service';
@@ -18,5 +18,14 @@ export class GameController {
 	@ApiResponse({ status: HttpStatus.OK, type: [ GameItem ] })
 	public async getAllGameItems() {
 		return await this.gameService.getAllGameItems();
+	}
+
+	@Get('/pages/:pageId')
+	@ApiOperation({ summary: '게임 페이지 조회' })
+	@ApiResponse({ status: HttpStatus.OK })
+	public async getGamePage(
+		@Param('pageId', ParseIntPipe) pageId: number
+	) {
+		return await this.gameService.getGamePage(pageId);
 	}
 }
