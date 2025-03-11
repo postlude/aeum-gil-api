@@ -2,7 +2,7 @@ import { Controller, Get, HttpStatus, Param, ParseIntPipe, UseGuards } from '@ne
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SignInRequired } from '../auth/jwt/sign-in-required.guard';
 import { GameService } from './game.service';
-import { GameItem } from './game.dto';
+import { GameItem, GamePage } from './game.dto';
 
 @Controller('/game')
 @UseGuards(SignInRequired)
@@ -22,7 +22,7 @@ export class GameController {
 
 	@Get('/pages/:pageId')
 	@ApiOperation({ summary: '게임 페이지 조회' })
-	@ApiResponse({ status: HttpStatus.OK })
+	@ApiResponse({ status: HttpStatus.OK, type: GamePage })
 	public async getGamePage(
 		@Param('pageId', ParseIntPipe) pageId: number
 	) {

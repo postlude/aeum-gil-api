@@ -3,12 +3,17 @@ import { FetchItemDto } from '../item/item.dto';
 import { ChapterInfo } from '../chapter/chapter.model';
 import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 import { Expose, Type } from 'class-transformer';
+import { ChoiceOptionItemMappingInfo } from '../choice-option/choice-option.model';
 
 export class GameItem extends OmitType(FetchItemDto, [ 'importance' ]) {}
 
 class GameChapter extends ChapterInfo {}
 
 class GameChoiceOption {
+	@ApiProperty({ type: Number, minimum: 1 })
+	@Expose()
+	public choiceOptionId: number;
+
 	@ApiProperty({ enum: MoveTargetType, enumName: 'MoveTargetType', description: '선택지 선택시 이동할 대상(1: 페이지, 2: 엔딩)' })
 	@Expose()
 	public moveTargetType: MoveTargetType;
@@ -20,12 +25,17 @@ class GameChoiceOption {
 	@ApiProperty({ type: String, description: '내용', maxLength: 300 })
 	@Expose()
 	public content: string;
+
+	@ApiProperty({ type: [ ChoiceOptionItemMappingInfo ], description: '선택지 아이템' })
+	@Type(() => ChoiceOptionItemMappingInfo)
+	@Expose()
+	public items?: ChoiceOptionItemMappingInfo[];
 }
 
 export class GamePage {
 	@ApiProperty({ type: Number })
 	@Expose()
-	public id: number;
+	public pageId: number;
 
 	@ApiProperty({ type: String, description: '제목', maxLength: 200 })
 	@Expose()
