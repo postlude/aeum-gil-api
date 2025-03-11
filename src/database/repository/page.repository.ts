@@ -32,7 +32,7 @@ export class PageRepository extends Repository<Page> {
 			.select([
 				'c.title', 'c.image',
 				'p.id', 'p.title', 'p.place', 'p.content',
-				'co.moveTargetType', 'co.targetId', 'co.content'
+				'co.id', 'co.moveTargetType', 'co.targetId', 'co.content'
 			])
 			.innerJoin('p.chapter', 'c')
 			.innerJoin('p.choiceOptions', 'co')
