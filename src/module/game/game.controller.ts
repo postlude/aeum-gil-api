@@ -32,7 +32,7 @@ export class GameController {
 	}
 
 	@Put('/play-records')
-	@ApiOperation({ summary: '게임 플레이 기록 저장' })
+	@ApiOperation({ summary: '게임 플레이 기록 저장. 선택지 입력시 호출' })
 	@ApiResponse({ status: HttpStatus.CREATED, description: '게임 플레이 기록 저장 성공' })
 	public async savePlayRecord(
 		@AuthUser() { userId }: SignInUser,
