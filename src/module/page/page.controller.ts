@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AdminOnly } from '../auth/jwt/admin-only.guard';
+import { AdminOnly } from '../../core/admin-only.guard';
 import { PageDto, SavePageBody } from './page.dto';
 import { PageService } from './page.service';
 

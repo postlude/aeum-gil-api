@@ -2,7 +2,7 @@ import { Body, Controller, Delete, HttpStatus, Param, ParseIntPipe, Post, Put, U
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChoiceOptionService } from './choice-option.service';
 import { AddChoiceOptionBody, AddChoiceOptionItemBody, ReorderChoiceOptionsBody, ReorderChoiceOptionsResponse, SetChoiceOptionBody, SetChoiceOptionItemBody } from './choice-option.dto';
-import { AdminOnly } from '../auth/jwt/admin-only.guard';
+import { AdminOnly } from '../../core/admin-only.guard';
 
 @Controller('/choice-options')
 @UseGuards(AdminOnly)
