@@ -6,13 +6,15 @@ import { ItemRepository } from 'src/database/repository/item.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
 import { In } from 'typeorm';
 import { GameItem, GamePage } from './game.dto';
+import { PlayRecordRepository } from 'src/database/repository/play-record.repository';
 
 @Injectable()
 export class GameService {
 	constructor(
 		private readonly pageRepository: PageRepository,
 		private readonly itemRepository: ItemRepository,
-		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository
+		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository,
+		private readonly playRecordRepository: PlayRecordRepository
 	) {}
 
 	public async getAllGameItems() {
@@ -51,5 +53,25 @@ export class GameService {
 	private async getItemMappings(choiceOptions: ChoiceOption[]) {
 		const choiceOptionIds = choiceOptions.map(({ id }) => id);
 		return await this.choiceOptionItemMappingRepository.findBy({ choiceOptionId: In(choiceOptionIds) });
+	}
+
+	public async savePlayRecord(params: {
+		userId: number,
+		pageId: number,
+		choiceOptionId: number
+	}) {
+		const { userId, pageId, choiceOptionId } = params;
+
+		const currentDetailLog = { choiceOptionId, createdAt: new Date() };
+
+		const record = await this.playRecordRepository.findOneBy({ userId, pageId });
+
+		if (record) {
+			const { detailLog } = record;
+			detailLog.push(currentDetailLog);
+			await this.playRecordRepository.update({ userId, pageId }, { detailLog });
+		} else {
+			await this.playRecordRepository.insert({ userId, pageId, detailLog: [ currentDetailLog ] });
+		}
 	}
 }

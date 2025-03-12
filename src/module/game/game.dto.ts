@@ -4,6 +4,7 @@ import { ChapterInfo } from '../chapter/chapter.model';
 import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 import { Expose, Type } from 'class-transformer';
 import { ChoiceOptionItemMappingInfo } from '../choice-option/choice-option.model';
+import { IsInt, Min } from 'class-validator';
 
 export class GameItem extends OmitType(FetchItemDto, [ 'importance' ]) {}
 
@@ -58,4 +59,16 @@ export class GamePage {
 	@Type(() => GameChoiceOption)
 	@Expose()
 	public choiceOptions: GameChoiceOption[];
+}
+
+export class SavePlayRecordDto {
+	@ApiProperty({ type: Number, description: '플레이한 페이지 id', minimum: 1 })
+	@IsInt()
+	@Min(1)
+	public pageId: number;
+
+	@ApiProperty({ type: Number, description: '선택한 선택지 id', minimum: 1 })
+	@IsInt()
+	@Min(1)
+	public choiceOptionId: number;
 }
