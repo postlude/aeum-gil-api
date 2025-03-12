@@ -5,6 +5,7 @@ import { GameItem, GamePage, SavePlayRecordDto } from './game.dto';
 import { SignInRequired } from 'src/core/sign-in-required.guard';
 import { AuthUser } from 'src/core/auth-user.decorator';
 import { SignInUser } from 'src/core/core.model';
+import { EndingInfo } from '../ending/ending.model';
 
 @Controller('/game')
 @UseGuards(SignInRequired)
@@ -39,5 +40,15 @@ export class GameController {
 		@Body() body: SavePlayRecordDto
 	) {
 		await this.gameService.savePlayRecord({ userId, ...body });
+	}
+
+	@Put('/endings/:endingId')
+	@ApiOperation({ summary: '엔딩 조회 및 엔딩 기록 저장' })
+	@ApiResponse({ status: HttpStatus.OK, type: EndingInfo })
+	public async saveEndingRecord(
+		@AuthUser() { userId }: SignInUser,
+		@Param('endingId', ParseIntPipe) endingId: number
+	) {
+		return await this.gameService.saveEndingRecord({ userId, endingId });
 	}
 }

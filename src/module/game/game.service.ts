@@ -7,6 +7,9 @@ import { PageRepository } from 'src/database/repository/page.repository';
 import { In } from 'typeorm';
 import { GameItem, GamePage } from './game.dto';
 import { PlayRecordRepository } from 'src/database/repository/play-record.repository';
+import { EndingRepository } from 'src/database/repository/ending.repository';
+import { EndingRecordRepository } from 'src/database/repository/ending-record.repository';
+import { EndingInfo } from '../ending/ending.model';
 
 @Injectable()
 export class GameService {
@@ -14,7 +17,9 @@ export class GameService {
 		private readonly pageRepository: PageRepository,
 		private readonly itemRepository: ItemRepository,
 		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository,
-		private readonly playRecordRepository: PlayRecordRepository
+		private readonly playRecordRepository: PlayRecordRepository,
+		private readonly endingRepository: EndingRepository,
+		private readonly endingRecordRepository: EndingRecordRepository
 	) {}
 
 	public async getAllGameItems() {
@@ -73,5 +78,21 @@ export class GameService {
 		} else {
 			await this.playRecordRepository.insert({ userId, pageId, detailLog: [ currentDetailLog ] });
 		}
+	}
+
+	public async saveEndingRecord(params: {
+		userId: number,
+		endingId: number
+	}) {
+		const { userId, endingId } = params;
+
+		const ending = await this.endingRepository.findOneBy({ id: endingId });
+		if (!ending) {
+			throw new NotFoundException('존재하지 않는 엔딩입니다.');
+		}
+
+		await this.endingRecordRepository.insert({ userId, endingId });
+
+		return plainToInstance(EndingInfo, ending, { excludeExtraneousValues: true });
 	}
 }
