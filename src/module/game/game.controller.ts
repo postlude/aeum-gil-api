@@ -1,8 +1,8 @@
 import { Controller, Get, HttpStatus, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SignInRequired } from '../auth/jwt/sign-in-required.guard';
 import { GameService } from './game.service';
 import { GameItem, GamePage } from './game.dto';
+import { SignInRequired } from 'src/core/sign-in-required.guard';
 
 @Controller('/game')
 @UseGuards(SignInRequired)
