@@ -20,8 +20,10 @@ import { User } from './entity/user.entity';
 import { UserRepository } from './repository/user.repository';
 import { PlayRecord } from './entity/play-record.entity';
 import { PlayRecordRepository } from './repository/play-record.repository';
+import { EndingRecord } from './entity/ending-record.entity';
+import { EndingRecordRepository } from './repository/ending-record.repository';
 
-const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User, PlayRecord ];
+const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User, PlayRecord, EndingRecord ];
 const providers = [
 	ChapterRepository,
 	ChoiceOptionItemMappingRepository,
@@ -30,7 +32,8 @@ const providers = [
 	ItemRepository,
 	PageRepository,
 	UserRepository,
-	PlayRecordRepository
+	PlayRecordRepository,
+	EndingRecordRepository
 ].map((repository) => ({
 	provide: repository,
 	useFactory: (dataSource: DataSource) => new repository(dataSource),
