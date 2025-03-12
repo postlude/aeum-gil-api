@@ -4,12 +4,10 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtConfig, JwtExpiration } from 'src/config/config.model';
-import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt/jwt.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
 	imports: [
-		PassportModule,
 		JwtModule.registerAsync({
 			inject: [ ConfigService ],
 			useFactory: (configService: ConfigService<JwtConfig>) => ({
