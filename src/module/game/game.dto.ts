@@ -5,6 +5,7 @@ import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 import { Expose, Type } from 'class-transformer';
 import { ChoiceOptionItemMappingInfo } from '../choice-option/choice-option.model';
 import { IsInt, Min } from 'class-validator';
+import { EndingInfo } from '../ending/ending.model';
 
 export class GameItem extends OmitType(FetchItemDto, [ 'importance' ]) {}
 
@@ -71,4 +72,10 @@ export class SavePlayRecordDto {
 	@IsInt()
 	@Min(1)
 	public choiceOptionId: number;
+}
+
+export class GameEnding extends EndingInfo {
+	@ApiProperty({ type: Boolean, description: '해당 엔딩이 클리어되었는지 여부' })
+	@Expose()
+	public isCleared: boolean;
 }

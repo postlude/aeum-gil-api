@@ -1,21 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { ChoiceOptionItemMappingRepository } from 'src/database/repository/choice-option-item-mapping.repository';
 import { EndingRecordRepository } from 'src/database/repository/ending-record.repository';
 import { EndingRepository } from 'src/database/repository/ending.repository';
 import { ItemRepository } from 'src/database/repository/item.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
 import { PlayRecordRepository } from 'src/database/repository/play-record.repository';
 import { isExists } from 'src/util/validator';
-import { EndingInfo } from '../ending/ending.model';
-import { GameItem, GamePage } from './game.dto';
+import { GameEnding, GameItem, GamePage } from './game.dto';
 
 @Injectable()
 export class GameService {
 	constructor(
 		private readonly pageRepository: PageRepository,
 		private readonly itemRepository: ItemRepository,
-		private readonly choiceOptionItemMappingRepository: ChoiceOptionItemMappingRepository,
 		private readonly playRecordRepository: PlayRecordRepository,
 		private readonly endingRepository: EndingRepository,
 		private readonly endingRecordRepository: EndingRecordRepository
@@ -77,8 +74,20 @@ export class GameService {
 		}
 	}
 
-	public async getAllGameEndings() {
-		const endings = await this.endingRepository.find({ order: { orderNum: 'ASC' } });
-		return plainToInstance(EndingInfo, endings, { excludeExtraneousValues: true });
+	public async getAllGameEndings(userId: number) {
+
+		const [ endings, records ] = await Promise.all([
+			this.endingRepository.find({ order: { orderNum: 'ASC' } }),
+			this.endingRecordRepository.findBy({ userId })
+		]);
+
+		return endings.map(({ id, ...rest }) => {
+			const isCleared = !!records.find(({ endingId }) => endingId === id);
+
+			return plainToInstance(GameEnding, {
+				...rest,
+				isCleared
+			}, { excludeExtraneousValues: true });
+		});
 	}
 }

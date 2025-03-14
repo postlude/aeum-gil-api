@@ -3,8 +3,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { AuthUser } from 'src/core/auth-user.decorator';
 import { SignInUser } from 'src/core/core.model';
 import { SignInRequired } from 'src/core/sign-in-required.guard';
-import { EndingInfo } from '../ending/ending.model';
-import { GameItem, GamePage, SavePlayRecordDto } from './game.dto';
+import { GameEnding, GameItem, GamePage, SavePlayRecordDto } from './game.dto';
 import { GameService } from './game.service';
 
 @Controller('/game')
@@ -32,9 +31,11 @@ export class GameController {
 
 	@Get('/endings')
 	@ApiOperation({ summary: '전체 엔딩 조회' })
-	@ApiResponse({ status: HttpStatus.OK, type: [ EndingInfo ] })
-	public async getAllGameEndings() {
-		return await this.gameService.getAllGameEndings();
+	@ApiResponse({ status: HttpStatus.OK, type: [ GameEnding ] })
+	public async getAllGameEndings(
+		@AuthUser() { userId }: SignInUser
+	) {
+		return await this.gameService.getAllGameEndings(userId);
 	}
 
 	@Put('/play-records')
