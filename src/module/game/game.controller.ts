@@ -1,11 +1,11 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GameService } from './game.service';
-import { GameItem, GamePage, SavePlayRecordDto } from './game.dto';
-import { SignInRequired } from 'src/core/sign-in-required.guard';
 import { AuthUser } from 'src/core/auth-user.decorator';
 import { SignInUser } from 'src/core/core.model';
+import { SignInRequired } from 'src/core/sign-in-required.guard';
 import { EndingInfo } from '../ending/ending.model';
+import { GameItem, GamePage, SavePlayRecordDto } from './game.dto';
+import { GameService } from './game.service';
 
 @Controller('/game')
 @UseGuards(SignInRequired)
@@ -30,6 +30,13 @@ export class GameController {
 		return await this.gameService.getAllGamePages();
 	}
 
+	@Get('/endings')
+	@ApiOperation({ summary: '전체 엔딩 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: [ EndingInfo ] })
+	public async getAllGameEndings() {
+		return await this.gameService.getAllGameEndings();
+	}
+
 	@Put('/play-records')
 	@ApiOperation({ summary: '게임 플레이 기록 저장. 선택지 입력시 호출' })
 	@ApiResponse({ status: HttpStatus.CREATED, description: '게임 플레이 기록 저장 성공' })
@@ -38,15 +45,5 @@ export class GameController {
 		@Body() body: SavePlayRecordDto
 	) {
 		await this.gameService.savePlayRecord({ userId, ...body });
-	}
-
-	@Put('/endings/:endingId')
-	@ApiOperation({ summary: '엔딩 조회 및 엔딩 기록 저장' })
-	@ApiResponse({ status: HttpStatus.OK, type: EndingInfo })
-	public async saveEndingRecord(
-		@AuthUser() { userId }: SignInUser,
-		@Param('endingId', ParseIntPipe) endingId: number
-	) {
-		return await this.gameService.saveEndingRecord({ userId, endingId });
 	}
 }
