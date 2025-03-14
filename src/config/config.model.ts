@@ -19,4 +19,4 @@ export interface JwtConfig {
 	JWT_SECRET: string
 }
 
-export const JwtExpiration = '1d';
+export const JwtExpiration = process.env.NODE_ENV === 'production' ? '1d' : '100y';
