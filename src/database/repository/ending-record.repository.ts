@@ -7,4 +7,16 @@ export class EndingRecordRepository extends Repository<EndingRecord> {
 	constructor(private dataSource: DataSource) {
 		super(EndingRecord, dataSource.createEntityManager());
 	}
+
+	public async insertIgnore(params: {
+		userId: number,
+		endingId: number
+	}) {
+		return await this.createQueryBuilder()
+			.comment('EndingRecordRepository.insertIgnore')
+			.insert()
+			.values(params)
+			.orIgnore()
+			.execute();
+	}
 }

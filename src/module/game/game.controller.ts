@@ -47,4 +47,14 @@ export class GameController {
 	) {
 		await this.gameService.savePlayRecord({ userId, ...body });
 	}
+
+	@Put('/ending-records')
+	@ApiOperation({ summary: '엔딩 클리어 정보 저장' })
+	@ApiResponse({ status: HttpStatus.CREATED })
+	public async saveEndingRecord(
+		@AuthUser() { userId }: SignInUser,
+		@Body() { endingId }: { endingId: number }
+	) {
+		await this.gameService.saveEndingRecord({ userId, endingId });
+	}
 }

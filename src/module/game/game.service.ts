@@ -90,4 +90,13 @@ export class GameService {
 			}, { excludeExtraneousValues: true });
 		});
 	}
+
+	public async saveEndingRecord(params: {
+		userId: number,
+		endingId: number
+	}) {
+		const { userId, endingId } = params;
+
+		await this.endingRecordRepository.insertIgnore({ userId, endingId });
+	}
 }
