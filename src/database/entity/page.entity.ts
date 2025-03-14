@@ -1,10 +1,13 @@
 import {
 	Column,
 	Entity,
+	JoinColumn,
+	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn
 } from 'typeorm';
 import { ChoiceOption } from './choice-option.entity';
+import { Chapter } from './chapter.entity';
 
 @Entity({ database: 'aeum_gil', name: 'page', comment: '페이지' })
 export class Page {
@@ -31,6 +34,10 @@ export class Page {
 
 	@Column({ name: 'updated_at', type: 'datetime' })
 	public updatedAt: Date;
+
+	@ManyToOne(() => Chapter, (chapter) => chapter.pages)
+	@JoinColumn({ name: 'chapter_id' })
+	public chapter?: Chapter;
 
 	@OneToMany(() => ChoiceOption, (choiceOption) => choiceOption.page)
 	public choiceOptions?: ChoiceOption[];

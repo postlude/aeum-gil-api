@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, P
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EndingService } from './ending.service';
 import { EndingDto, SaveEndingBody } from './ending.dto';
-import { AdminOnly } from '../auth/jwt/admin-only.guard';
+import { AdminOnly } from '../../core/admin-only.guard';
 
 @Controller('/endings')
 @UseGuards(AdminOnly)
