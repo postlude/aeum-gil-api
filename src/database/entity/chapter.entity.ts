@@ -1,8 +1,10 @@
 import {
 	Column,
 	Entity,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from 'typeorm';
+import { Page } from './page.entity';
 
 @Entity({ database: 'aeum_gil', name: 'chapter', comment: '챕터' })
 export class Chapter {
@@ -20,4 +22,7 @@ export class Chapter {
 
 	@Column({ name: 'updated_at', type: 'datetime' })
 	public updatedAt: Date;
+
+	@OneToMany(() => Page, (page) => page.chapter)
+	public pages?: Page[];
 }

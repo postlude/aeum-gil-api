@@ -3,10 +3,12 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	Relation
 } from 'typeorm';
 import { Page } from './page.entity';
+import { ChoiceOptionItemMapping } from './choice-option-item-mapping.entity';
 
 /**
  * 선택지 선택시 이동할 대상
@@ -45,4 +47,7 @@ export class ChoiceOption {
 	@ManyToOne(() => Page, (page) => page.choiceOptions)
 	@JoinColumn({ name: 'page_id' })
 	public page?: Relation<Page>;
+
+	@OneToMany(() => ChoiceOptionItemMapping, (choiceOptionItemMapping) => choiceOptionItemMapping.choiceOption)
+	public choiceOptionItemMappings?: ChoiceOptionItemMapping[];
 }

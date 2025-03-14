@@ -25,4 +25,21 @@ export class PageRepository extends Repository<Page> {
 			.addOrderBy('co.orderNum', 'ASC')
 			.getMany();
 	}
+
+	public async findAllGamePages() {
+		return await this.createQueryBuilder('p')
+			.comment('PageRepository.findAllGamePages')
+			.select([
+				'c.title', 'c.image',
+				'p.id', 'p.title', 'p.place', 'p.content',
+				'co.id', 'co.moveTargetType', 'co.targetId', 'co.content',
+				'coim.itemId', 'coim.actionType'
+			])
+			.innerJoin('p.chapter', 'c')
+			.innerJoin('p.choiceOptions', 'co')
+			.leftJoin('co.choiceOptionItemMappings', 'coim')
+			.orderBy('p.id', 'ASC')
+			.addOrderBy('co.orderNum', 'ASC')
+			.getMany();
+	}
 }

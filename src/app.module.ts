@@ -12,6 +12,7 @@ import { ErrorInterceptor } from './core/error.interceptor';
 import { DiscordService } from './util/discord.service';
 import { ChapterModule } from './module/chapter/chapter.module';
 import { AuthModule } from './module/auth/auth.module';
+import { GameModule } from './module/game/game.module';
 
 @Module({
 	imports: [
@@ -27,7 +28,8 @@ import { AuthModule } from './module/auth/auth.module';
 		FileModule,
 		EndingModule,
 		ChapterModule,
-		AuthModule
+		AuthModule,
+		GameModule
 	],
 	controllers: [ AppController ],
 	providers: [
