@@ -23,13 +23,11 @@ export class GameController {
 		return await this.gameService.getAllGameItems();
 	}
 
-	@Get('/pages/:pageId')
-	@ApiOperation({ summary: '게임 페이지 조회' })
-	@ApiResponse({ status: HttpStatus.OK, type: GamePage })
-	public async getGamePage(
-		@Param('pageId', ParseIntPipe) pageId: number
-	) {
-		return await this.gameService.getGamePage(pageId);
+	@Get('/pages')
+	@ApiOperation({ summary: '전체 게임 페이지 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: [ GamePage ] })
+	public async getAllGamePages() {
+		return await this.gameService.getAllGamePages();
 	}
 
 	@Put('/play-records')

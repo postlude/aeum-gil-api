@@ -10,6 +10,7 @@ import { PlayRecordRepository } from 'src/database/repository/play-record.reposi
 import { EndingRepository } from 'src/database/repository/ending.repository';
 import { EndingRecordRepository } from 'src/database/repository/ending-record.repository';
 import { EndingInfo } from '../ending/ending.model';
+import { isExists } from 'src/util/validator';
 
 @Injectable()
 export class GameService {
@@ -30,34 +31,32 @@ export class GameService {
 		return plainToInstance(GameItem, items);
 	}
 
-	public async getGamePage(pageId: number) {
-		const page = await this.pageRepository.findGamePage(pageId);
-		if (!page?.choiceOptions?.length) {
-			throw new NotFoundException('존재하지 않는 페이지입니다.');
-		}
+	public async getAllGamePages() {
+		const pages = await this.pageRepository.findAllGamePages();
 
-		const { id, choiceOptions, ...rest } = page;
+		return pages.map(({ id, choiceOptions, ...pageRest }) => {
+			if (!choiceOptions) {
+				return;
+			}
 
-		const itemMappings = await this.getItemMappings(choiceOptions);
-		const gameChoiceOptions = choiceOptions.map(({ id, ...rest }) => {
-			const items = itemMappings.filter(({ choiceOptionId }) => choiceOptionId === id);
-			return {
-				choiceOptionId: id,
-				items: items.length ? items : undefined,
-				...rest
-			};
-		});
+			const parsed = choiceOptions.map(({ id, choiceOptionItemMappings, ...choiceOptionRest }) => {
+				if (!choiceOptionItemMappings) {
+					return;
+				}
 
-		return plainToInstance(GamePage, {
-			pageId: id,
-			choiceOptions: gameChoiceOptions,
-			...rest
-		}, { excludeExtraneousValues: true });
-	}
+				return {
+					choiceOptionId: id,
+					items: choiceOptionItemMappings,
+					...choiceOptionRest
+				};
+			}).filter(isExists);
 
-	private async getItemMappings(choiceOptions: ChoiceOption[]) {
-		const choiceOptionIds = choiceOptions.map(({ id }) => id);
-		return await this.choiceOptionItemMappingRepository.findBy({ choiceOptionId: In(choiceOptionIds) });
+			return plainToInstance(GamePage, {
+				pageId: id,
+				choiceOptions: parsed,
+				...pageRest
+			}, { excludeExtraneousValues: true });
+		}).filter(isExists);
 	}
 
 	public async savePlayRecord(params: {

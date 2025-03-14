@@ -26,18 +26,20 @@ export class PageRepository extends Repository<Page> {
 			.getMany();
 	}
 
-	public async findGamePage(pageId: number) {
+	public async findAllGamePages() {
 		return await this.createQueryBuilder('p')
-			.comment('PageRepository.findGamePage')
+			.comment('PageRepository.findAllGamePages')
 			.select([
 				'c.title', 'c.image',
 				'p.id', 'p.title', 'p.place', 'p.content',
-				'co.id', 'co.moveTargetType', 'co.targetId', 'co.content'
+				'co.id', 'co.moveTargetType', 'co.targetId', 'co.content',
+				'coim.itemId', 'coim.actionType'
 			])
 			.innerJoin('p.chapter', 'c')
 			.innerJoin('p.choiceOptions', 'co')
-			.where('p.id = :pageId', { pageId })
-			.orderBy('co.orderNum', 'ASC')
-			.getOne();
+			.leftJoin('co.choiceOptionItemMappings', 'coim')
+			.orderBy('p.id', 'ASC')
+			.addOrderBy('co.orderNum', 'ASC')
+			.getMany();
 	}
 }
