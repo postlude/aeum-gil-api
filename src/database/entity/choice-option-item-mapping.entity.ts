@@ -1,8 +1,12 @@
 import {
 	Column,
 	Entity,
-	PrimaryColumn
+	JoinColumn,
+	ManyToOne,
+	PrimaryColumn,
+	Relation
 } from 'typeorm';
+import { ChoiceOption } from './choice-option.entity';
 
 export enum ItemActionType {
 	Gain = 1,
@@ -25,4 +29,8 @@ export class ChoiceOptionItemMapping {
 
 	@Column({ name: 'updated_at', type: 'datetime' })
 	public updatedAt: Date;
+
+	@ManyToOne(() => ChoiceOption, (choiceOption) => choiceOption.choiceOptionItemMappings)
+	@JoinColumn({ name: 'choice_option_id', referencedColumnName: 'id' })
+	public choiceOption?: Relation<ChoiceOption>;
 }
