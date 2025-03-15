@@ -22,8 +22,10 @@ import { PlayRecord } from './entity/play-record.entity';
 import { PlayRecordRepository } from './repository/play-record.repository';
 import { EndingRecord } from './entity/ending-record.entity';
 import { EndingRecordRepository } from './repository/ending-record.repository';
+import { PlayStatus } from './entity/play-status.entity';
+import { PlayStatusRepository } from './repository/play-status.repository';
 
-const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User, PlayRecord, EndingRecord ];
+const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User, PlayRecord, EndingRecord, PlayStatus ];
 const providers = [
 	ChapterRepository,
 	ChoiceOptionItemMappingRepository,
@@ -33,7 +35,8 @@ const providers = [
 	PageRepository,
 	UserRepository,
 	PlayRecordRepository,
-	EndingRecordRepository
+	EndingRecordRepository,
+	PlayStatusRepository
 ].map((repository) => ({
 	provide: repository,
 	useFactory: (dataSource: DataSource) => new repository(dataSource),
