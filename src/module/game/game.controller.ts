@@ -5,6 +5,7 @@ import { SignInUser } from 'src/core/core.model';
 import { SignInRequired } from 'src/core/sign-in-required.guard';
 import { GameEnding, GameItem, GamePage, SavePlayRecordDto } from './game.dto';
 import { GameService } from './game.service';
+import { GameStatus } from 'src/database/entity/play-status.entity';
 
 @Controller('/game')
 @UseGuards(SignInRequired)
@@ -56,5 +57,14 @@ export class GameController {
 		@Body() { endingId }: { endingId: number }
 	) {
 		await this.gameService.saveEndingRecord({ userId, endingId });
+	}
+
+	@Get('/play-status')
+	@ApiOperation({ summary: '유저의 현재 플레이 상태 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: GameStatus })
+	public async getPlayStatus(
+		@AuthUser() { userId }: SignInUser
+	) {
+		return await this.gameService.getPlayStatus(userId);
 	}
 }

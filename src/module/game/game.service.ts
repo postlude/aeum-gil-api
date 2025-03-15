@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { EndingRecordRepository } from 'src/database/repository/ending-record.repository';
 import { EndingRepository } from 'src/database/repository/ending.repository';
@@ -7,6 +7,7 @@ import { PageRepository } from 'src/database/repository/page.repository';
 import { PlayRecordRepository } from 'src/database/repository/play-record.repository';
 import { isExists } from 'src/util/validator';
 import { GameEnding, GameItem, GamePage } from './game.dto';
+import { PlayStatusRepository } from 'src/database/repository/play-status.repository';
 
 @Injectable()
 export class GameService {
@@ -15,7 +16,8 @@ export class GameService {
 		private readonly itemRepository: ItemRepository,
 		private readonly playRecordRepository: PlayRecordRepository,
 		private readonly endingRepository: EndingRepository,
-		private readonly endingRecordRepository: EndingRecordRepository
+		private readonly endingRecordRepository: EndingRecordRepository,
+		private readonly playStatusRepository: PlayStatusRepository
 	) {}
 
 	public async getAllGameItems() {
@@ -98,5 +100,14 @@ export class GameService {
 		const { userId, endingId } = params;
 
 		await this.endingRecordRepository.insertIgnore({ userId, endingId });
+	}
+
+	public async getPlayStatus(userId: number) {
+		const playStatus = await this.playStatusRepository.findOneBy({ userId });
+		if (!playStatus) {
+			throw new NotFoundException('플레이 상태가 존재하지 않습니다.');
+		}
+
+		return playStatus.gameStatus;
 	}
 }
