@@ -1,12 +1,16 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRepository } from 'src/database/repository/user.repository';
-import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
+import * as argon2 from 'argon2';
+import { PlayStatusRepository } from 'src/database/repository/play-status.repository';
+import { UserRepository } from 'src/database/repository/user.repository';
+import { InitialGameStatus } from '../game/game.model';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private readonly userRepository: UserRepository,
+		private readonly playStatusRepository: PlayStatusRepository,
 		private readonly jwtService: JwtService
 	) {}
 
@@ -18,13 +22,26 @@ export class AuthService {
 
 		const encrypted = await argon2.hash(password);
 
+		const userId = await this.progressSignUp(name, encrypted);
+
+		return await this.getAccessToken(userId, name);
+	}
+
+	@Transactional()
+	private async progressSignUp(name: string, encryptedPassword: string) {
 		const { identifiers } = await this.userRepository.insert({
 			name,
-			password: encrypted
+			password: encryptedPassword
 		});
 
 		const userId = identifiers[0].id as number;
-		return await this.getAccessToken(userId, name);
+
+		await this.playStatusRepository.insert({
+			userId,
+			gameStatus: InitialGameStatus
+		});
+
+		return userId;
 	}
 
 	public async signIn(name: string, inputPassword: string) {
