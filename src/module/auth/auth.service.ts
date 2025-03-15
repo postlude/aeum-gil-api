@@ -24,7 +24,7 @@ export class AuthService {
 
 		const userId = await this.progressSignUp(name, encrypted);
 
-		return await this.getAccessToken(userId, name);
+		return await this.getJwtToken(userId, name);
 	}
 
 	@Transactional()
@@ -57,10 +57,10 @@ export class AuthService {
 			throw new UnauthorizedException('존재하지 않는 이름이거나 비밀번호가 일치하지 않습니다.');
 		}
 
-		return await this.getAccessToken(id, name);
+		return await this.getJwtToken(id, name);
 	}
 
-	private async getAccessToken(userId: number, name: string) {
+	private async getJwtToken(userId: number, name: string) {
 		return await this.jwtService.signAsync({
 			sub: userId,
 			name
