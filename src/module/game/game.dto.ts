@@ -88,11 +88,14 @@ export class GameEnding extends EndingInfo {
 
 export class GameStatus {
 	@ApiProperty({ enum: MoveTargetType, enumName: 'MoveTargetType', description: '선택지 선택시 이동할 대상(1: 페이지, 2: 엔딩)' })
+	@Expose()
 	public moveTargetType: MoveTargetType;
 
 	@ApiProperty({ type: Number, description: '다음 페이지 id or 엔딩 id', minimum: 1 })
+	@Expose()
 	public targetId: number;
 
 	@ApiProperty({ type: [ OwnedItem ], description: '현재 소유한 아이템 정보' })
+	@Expose()
 	public ownedItems: OwnedItem[];
 }
