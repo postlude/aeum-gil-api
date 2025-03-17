@@ -5,7 +5,7 @@ import { SignInUser } from 'src/core/core.model';
 import { SignInRequired } from 'src/core/sign-in-required.guard';
 import { GameEnding, GameItem, GamePage, SavePlayRecordDto } from './game.dto';
 import { GameService } from './game.service';
-import { GameStatus } from 'src/database/entity/play-status.entity';
+import { GameStatus } from 'src/database/entity/game-status.model';
 
 @Controller('/game')
 @UseGuards(SignInRequired)
