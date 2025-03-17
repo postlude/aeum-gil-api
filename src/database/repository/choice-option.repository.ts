@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { ChoiceOption } from '../entity/choice-option.entity';
+import { ChoiceOption } from '../entity';
 
 @Injectable()
 export class ChoiceOptionRepository extends Repository<ChoiceOption> {

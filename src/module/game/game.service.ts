@@ -6,8 +6,9 @@ import { ItemRepository } from 'src/database/repository/item.repository';
 import { PageRepository } from 'src/database/repository/page.repository';
 import { PlayRecordRepository } from 'src/database/repository/play-record.repository';
 import { isExists } from 'src/util/validator';
-import { GameEnding, GameItem, GamePage } from './game.dto';
+import { GameEnding, GameItem, GamePage, GameStatus } from './game.dto';
 import { PlayStatusRepository } from 'src/database/repository/play-status.repository';
+import { OwnedItem } from 'src/database/entity/entity-common.model';
 
 @Injectable()
 export class GameService {
@@ -59,11 +60,16 @@ export class GameService {
 	public async savePlayRecord(params: {
 		userId: number,
 		pageId: number,
-		choiceOptionId: number
+		choiceOptionId: number,
+		ownedItems: OwnedItem[]
 	}) {
-		const { userId, pageId, choiceOptionId } = params;
+		const { userId, pageId, choiceOptionId, ownedItems } = params;
 
-		const currentDetailLog = { choiceOptionId, createdAt: new Date() };
+		const currentDetailLog = {
+			choiceOptionId,
+			createdAt: new Date(),
+			ownedItems
+		};
 
 		const record = await this.playRecordRepository.findOneBy({ userId, pageId });
 
@@ -108,6 +114,6 @@ export class GameService {
 			throw new NotFoundException('플레이 상태가 존재하지 않습니다.');
 		}
 
-		return playStatus.gameStatus;
+		return plainToInstance(GameStatus, playStatus, { excludeExtraneousValues: true });
 	}
 }

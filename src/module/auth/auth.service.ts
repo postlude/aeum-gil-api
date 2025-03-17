@@ -38,7 +38,7 @@ export class AuthService {
 
 		await this.playStatusRepository.insert({
 			userId,
-			gameStatus: InitialGameStatus
+			...InitialGameStatus
 		});
 
 		return userId;

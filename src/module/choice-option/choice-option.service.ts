@@ -4,9 +4,8 @@ import { PageRepository } from 'src/database/repository/page.repository';
 import { In } from 'typeorm';
 import { AddChoiceOptionBody, AddChoiceOptionItemBody, SetChoiceOptionBody } from './choice-option.dto';
 import { ChoiceOptionItemMappingRepository } from 'src/database/repository/choice-option-item-mapping.repository';
-import { ItemActionType } from 'src/database/entity/choice-option-item-mapping.entity';
+import { ItemActionType, MoveTargetType } from 'src/database/entity';
 import { ItemRepository } from 'src/database/repository/item.repository';
-import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 import { EndingRepository } from 'src/database/repository/ending.repository';
 
 @Injectable()

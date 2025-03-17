@@ -3,12 +3,12 @@ import {
 	Entity,
 	PrimaryColumn
 } from 'typeorm';
-import { GameStatus } from './game-status.model';
+import { OwnedItem } from './entity-common.model';
 
 export interface PlayRecordDetailLog {
 	choiceOptionId: number;
 	createdAt: Date;
-	gameStatus: GameStatus
+	ownedItems: OwnedItem[];
 }
 
 @Entity({ database: 'aeum_gil', name: 'play_record', comment: '플레이 기록' })

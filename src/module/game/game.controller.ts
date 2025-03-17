@@ -3,9 +3,8 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { AuthUser } from 'src/core/auth-user.decorator';
 import { SignInUser } from 'src/core/core.model';
 import { SignInRequired } from 'src/core/sign-in-required.guard';
-import { GameEnding, GameItem, GamePage, SavePlayRecordDto } from './game.dto';
+import { GameEnding, GameItem, GamePage, GameStatus, SavePlayRecordDto } from './game.dto';
 import { GameService } from './game.service';
-import { GameStatus } from 'src/database/entity/game-status.model';
 
 @Controller('/game')
 @UseGuards(SignInRequired)

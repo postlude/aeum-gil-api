@@ -1,4 +1,4 @@
-import { MoveTargetType } from 'src/database/entity/choice-option.entity';
+import { MoveTargetType } from 'src/database/entity/entity-common.model';
 
 // TODO: id 값 확인 후 수정
 export const InitialGameStatus = {

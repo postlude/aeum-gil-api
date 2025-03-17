@@ -6,7 +6,7 @@ import { EndingInfo } from './ending.model';
 import { Not } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
-import { MoveTargetType } from 'src/database/entity/choice-option.entity';
+import { MoveTargetType } from 'src/database/entity/entity-common.model';
 
 @Injectable()
 export class EndingService {

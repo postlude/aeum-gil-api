@@ -1,11 +1,11 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { FetchItemDto } from '../item/item.dto';
-import { ChapterInfo } from '../chapter/chapter.model';
-import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 import { Expose, Type } from 'class-transformer';
+import { ArrayNotEmpty, IsInt, Min, ValidateNested } from 'class-validator';
+import { MoveTargetType, OwnedItem } from 'src/database/entity/entity-common.model';
+import { ChapterInfo } from '../chapter/chapter.model';
 import { ChoiceOptionItemMappingInfo } from '../choice-option/choice-option.model';
-import { IsInt, Min } from 'class-validator';
 import { EndingInfo } from '../ending/ending.model';
+import { FetchItemDto } from '../item/item.dto';
 
 export class GameItem extends OmitType(FetchItemDto, [ 'importance' ]) {}
 
@@ -72,10 +72,27 @@ export class SavePlayRecordDto {
 	@IsInt()
 	@Min(1)
 	public choiceOptionId: number;
+
+	@ApiProperty({ type: [ OwnedItem ], description: '현재 소유한 아이템 정보' })
+	@Type(() => OwnedItem)
+	@ArrayNotEmpty()
+	@ValidateNested()
+	public ownedItems: OwnedItem[];
 }
 
 export class GameEnding extends EndingInfo {
 	@ApiProperty({ type: Boolean, description: '해당 엔딩이 클리어되었는지 여부' })
 	@Expose()
 	public isCleared: boolean;
+}
+
+export class GameStatus {
+	@ApiProperty({ enum: MoveTargetType, enumName: 'MoveTargetType', description: '선택지 선택시 이동할 대상(1: 페이지, 2: 엔딩)' })
+	public moveTargetType: MoveTargetType;
+
+	@ApiProperty({ type: Number, description: '다음 페이지 id or 엔딩 id', minimum: 1 })
+	public targetId: number;
+
+	@ApiProperty({ type: [ OwnedItem ], description: '현재 소유한 아이템 정보' })
+	public ownedItems: OwnedItem[];
 }

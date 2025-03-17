@@ -3,15 +3,21 @@ import {
 	Entity,
 	PrimaryColumn
 } from 'typeorm';
-import { GameStatus } from './game-status.model';
+import { MoveTargetType, OwnedItem } from './entity-common.model';
 
 @Entity({ database: 'aeum_gil', name: 'play_status', comment: '유저의 현재 플레이 상태' })
 export class PlayStatus {
 	@PrimaryColumn({ name: 'user_id', type: 'int', unsigned: true })
 	public userId: number;
 
-	@Column({ name: 'game_status', type: 'json', comment: '다음 플레이할 페이지, 현재 소지 아이템 등' })
-	public gameStatus: GameStatus;
+	@Column({ name: 'move_target_type', type: 'tinyint', unsigned: true, comment: '1: 페이지, 2: 엔딩' })
+	public moveTargetType: MoveTargetType;
+
+	@Column({ name: 'target_id', type: 'int', unsigned: true, comment: '다음 페이지 id or 엔딩 id' })
+	public targetId: number;
+
+	@Column({ name: 'owned_items', type: 'json', comment: '현재 소유한 아이템 정보' })
+	public ownedItems: OwnedItem[];
 
 	@Column({ name: 'created_at', type: 'datetime' })
 	public createdAt: Date;

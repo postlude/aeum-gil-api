@@ -8,8 +8,8 @@ import { PageChoiceOptionItem, PageDto, SavePageBody } from './page.dto';
 import { PageInfo } from './page.model';
 import { Transactional } from 'typeorm-transactional';
 import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
-import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 import { ChapterRepository } from 'src/database/repository/chapter.repository';
+import { MoveTargetType } from 'src/database/entity/entity-common.model';
 
 @Injectable()
 export class PageService {

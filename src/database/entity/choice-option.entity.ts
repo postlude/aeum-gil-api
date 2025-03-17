@@ -9,14 +9,7 @@ import {
 } from 'typeorm';
 import { Page } from './page.entity';
 import { ChoiceOptionItemMapping } from './choice-option-item-mapping.entity';
-
-/**
- * 선택지 선택시 이동할 대상
- */
-export enum MoveTargetType {
-	Page = 1,
-	Ending
-}
+import { MoveTargetType } from './entity-common.model';
 
 @Entity({ database: 'aeum_gil', name: 'choice_option', comment: '선택지' })
 export class ChoiceOption {
