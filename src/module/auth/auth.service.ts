@@ -1,8 +1,7 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
-import { PlayStatusRepository } from 'src/database/repository/play-status.repository';
-import { UserRepository } from 'src/database/repository/user.repository';
+import { PlayStatusRepository, UserRepository } from 'src/database/repository';
 import { InitialGameStatus } from '../game/game.model';
 import { Transactional } from 'typeorm-transactional';
 

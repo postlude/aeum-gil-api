@@ -1,12 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
-import { PageRepository } from 'src/database/repository/page.repository';
+import { ChoiceOptionItemMappingRepository, ChoiceOptionRepository, EndingRepository, ItemRepository, PageRepository } from 'src/database/repository';
 import { In } from 'typeorm';
 import { AddChoiceOptionBody, AddChoiceOptionItemBody, SetChoiceOptionBody } from './choice-option.dto';
-import { ChoiceOptionItemMappingRepository } from 'src/database/repository/choice-option-item-mapping.repository';
 import { ItemActionType, MoveTargetType } from 'src/database/entity';
-import { ItemRepository } from 'src/database/repository/item.repository';
-import { EndingRepository } from 'src/database/repository/ending.repository';
 
 @Injectable()
 export class ChoiceOptionService {

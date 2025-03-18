@@ -4,17 +4,30 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MySqlConfig } from 'src/config/config.model';
 import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
-import { Page, Chapter, ChoiceOption, ChoiceOptionItemMapping, Ending, EndingRecord, Item, PlayRecord, PlayStatus, User } from './entity';
-import { PageRepository } from './repository/page.repository';
-import { ChoiceOptionRepository } from './repository/choice-option.repository';
-import { ItemRepository } from './repository/item.repository';
-import { ChoiceOptionItemMappingRepository } from './repository/choice-option-item-mapping.repository';
-import { EndingRepository } from './repository/ending.repository';
-import { ChapterRepository } from './repository/chapter.repository';
-import { UserRepository } from './repository/user.repository';
-import { PlayRecordRepository } from './repository/play-record.repository';
-import { EndingRecordRepository } from './repository/ending-record.repository';
-import { PlayStatusRepository } from './repository/play-status.repository';
+import {
+	Page,
+	Chapter,
+	ChoiceOption,
+	ChoiceOptionItemMapping,
+	Ending,
+	EndingRecord,
+	Item,
+	PlayRecord,
+	PlayStatus,
+	User
+} from './entity';
+import {
+	PageRepository,
+	ChapterRepository,
+	ChoiceOptionItemMappingRepository,
+	ChoiceOptionRepository,
+	EndingRecordRepository,
+	EndingRepository,
+	ItemRepository,
+	PlayRecordRepository,
+	PlayStatusRepository,
+	UserRepository
+} from './repository';
 
 const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User, PlayRecord, EndingRecord, PlayStatus ];
 const providers = [

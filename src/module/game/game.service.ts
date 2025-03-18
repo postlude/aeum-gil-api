@@ -1,14 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { EndingRecordRepository } from 'src/database/repository/ending-record.repository';
-import { EndingRepository } from 'src/database/repository/ending.repository';
-import { ItemRepository } from 'src/database/repository/item.repository';
-import { PageRepository } from 'src/database/repository/page.repository';
-import { PlayRecordRepository } from 'src/database/repository/play-record.repository';
+import { EndingRecordRepository, EndingRepository, ItemRepository, PageRepository, PlayRecordRepository, PlayStatusRepository } from 'src/database/repository';
 import { isExists } from 'src/util/validator';
 import { GameEnding, GameItem, GamePage, GameStatus } from './game.dto';
-import { PlayStatusRepository } from 'src/database/repository/play-status.repository';
-import { OwnedItem } from 'src/database/entity/entity-common.model';
+import { OwnedItem } from 'src/database/entity';
 
 @Injectable()
 export class GameService {
