@@ -8,6 +8,7 @@ import { OwnedItem } from './entity-common.model';
 export interface PlayRecordDetailLog {
 	choiceOptionId: number;
 	createdAt: Date;
+	/** play_record에 저장된 ownedItems는 선택지를 선택하기 전 소유한 아이템 목록 */
 	ownedItems: OwnedItem[];
 }
 
