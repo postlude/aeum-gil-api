@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ChapterRepository } from 'src/database/repository/chapter.repository';
-import { PageRepository } from 'src/database/repository/page.repository';
+import { ChapterRepository, PageRepository } from 'src/database/repository';
 import { Transactional } from 'typeorm-transactional';
 
 @Injectable()

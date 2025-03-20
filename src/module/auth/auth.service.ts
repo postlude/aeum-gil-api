@@ -1,12 +1,15 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRepository } from 'src/database/repository/user.repository';
-import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
+import * as argon2 from 'argon2';
+import { PlayStatusRepository, UserRepository } from 'src/database/repository';
+import { InitialGameStatus } from '../game/game.model';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private readonly userRepository: UserRepository,
+		private readonly playStatusRepository: PlayStatusRepository,
 		private readonly jwtService: JwtService
 	) {}
 
@@ -18,13 +21,26 @@ export class AuthService {
 
 		const encrypted = await argon2.hash(password);
 
+		const userId = await this.progressSignUp(name, encrypted);
+
+		return await this.getJwtToken(userId, name);
+	}
+
+	@Transactional()
+	private async progressSignUp(name: string, encryptedPassword: string) {
 		const { identifiers } = await this.userRepository.insert({
 			name,
-			password: encrypted
+			password: encryptedPassword
 		});
 
 		const userId = identifiers[0].id as number;
-		return await this.getAccessToken(userId, name);
+
+		await this.playStatusRepository.insert({
+			userId,
+			...InitialGameStatus
+		});
+
+		return userId;
 	}
 
 	public async signIn(name: string, inputPassword: string) {
@@ -40,10 +56,10 @@ export class AuthService {
 			throw new UnauthorizedException('존재하지 않는 이름이거나 비밀번호가 일치하지 않습니다.');
 		}
 
-		return await this.getAccessToken(id, name);
+		return await this.getJwtToken(id, name);
 	}
 
-	private async getAccessToken(userId: number, name: string) {
+	private async getJwtToken(userId: number, name: string) {
 		return await this.jwtService.signAsync({
 			sub: userId,
 			name

@@ -1,15 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { ChoiceOptionItemMappingRepository } from 'src/database/repository/choice-option-item-mapping.repository';
-import { PageRepository } from 'src/database/repository/page.repository';
+import { ChapterRepository, ChoiceOptionItemMappingRepository, ChoiceOptionRepository, PageRepository } from 'src/database/repository';
 import { isExists } from 'src/util/validator';
 import { In } from 'typeorm';
 import { PageChoiceOptionItem, PageDto, SavePageBody } from './page.dto';
 import { PageInfo } from './page.model';
 import { Transactional } from 'typeorm-transactional';
-import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
-import { MoveTargetType } from 'src/database/entity/choice-option.entity';
-import { ChapterRepository } from 'src/database/repository/chapter.repository';
+import { MoveTargetType } from 'src/database/entity';
 
 @Injectable()
 export class PageService {

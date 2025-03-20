@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { EndingRecord } from '../entity/ending-record.entity';
+import { EndingRecord } from '../entity';
 
 @Injectable()
 export class EndingRecordRepository extends Repository<EndingRecord> {

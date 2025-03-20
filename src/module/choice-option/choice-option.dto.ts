@@ -1,6 +1,6 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { ArrayNotEmpty, IsEnum, IsInt } from 'class-validator';
-import { ItemActionType } from 'src/database/entity/choice-option-item-mapping.entity';
+import { ItemActionType } from 'src/database/entity';
 import { ChoiceOptionInfo, ChoiceOptionItemMappingInfo } from './choice-option.model';
 
 export class AddChoiceOptionBody extends ChoiceOptionInfo {}

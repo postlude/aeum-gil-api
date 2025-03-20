@@ -4,7 +4,8 @@ import {
 	JoinColumn,
 	ManyToOne,
 	OneToMany,
-	PrimaryGeneratedColumn
+	PrimaryGeneratedColumn,
+	Relation
 } from 'typeorm';
 import { ChoiceOption } from './choice-option.entity';
 import { Chapter } from './chapter.entity';
@@ -37,7 +38,7 @@ export class Page {
 
 	@ManyToOne(() => Chapter, (chapter) => chapter.pages)
 	@JoinColumn({ name: 'chapter_id' })
-	public chapter?: Chapter;
+	public chapter?: Relation<Chapter>;
 
 	@OneToMany(() => ChoiceOption, (choiceOption) => choiceOption.page)
 	public choiceOptions?: ChoiceOption[];
