@@ -3,7 +3,8 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { AuthUser } from 'src/core/auth-user.decorator';
 import { SignInUser } from 'src/core/core.model';
 import { SignInRequired } from 'src/core/sign-in-required.guard';
-import { GameEnding, GameItem, GamePage, SavePlayRecordDto } from './game.dto';
+import { GameEnding, GameItem, GamePage, SavePlayRecordBody } from './game.dto';
+import { PlayStatusInfo } from './game.model';
 import { GameService } from './game.service';
 
 @Controller('/game')
@@ -39,13 +40,13 @@ export class GameController {
 	}
 
 	@Put('/play-records')
-	@ApiOperation({ summary: '게임 플레이 기록 저장. 선택지 입력시 호출' })
-	@ApiResponse({ status: HttpStatus.CREATED, description: '게임 플레이 기록 저장 성공' })
+	@ApiOperation({ summary: '게임 플레이 기록 저장', description: '선택지 입력시 호출. 플레이 기록, 상태 저장' })
+	@ApiResponse({ status: HttpStatus.CREATED, type: PlayStatusInfo, description: '선택지 입력 후 현재 상태 정보' })
 	public async savePlayRecord(
 		@AuthUser() { userId }: SignInUser,
-		@Body() body: SavePlayRecordDto
+		@Body() body: SavePlayRecordBody
 	) {
-		await this.gameService.savePlayRecord({ userId, ...body });
+		return await this.gameService.savePlayRecord({ userId, ...body });
 	}
 
 	@Put('/ending-records')
@@ -56,5 +57,14 @@ export class GameController {
 		@Body() { endingId }: { endingId: number }
 	) {
 		await this.gameService.saveEndingRecord({ userId, endingId });
+	}
+
+	@Get('/play-status')
+	@ApiOperation({ summary: '유저의 현재 플레이 상태 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: PlayStatusInfo })
+	public async getPlayStatus(
+		@AuthUser() { userId }: SignInUser
+	) {
+		return await this.gameService.getPlayStatus(userId);
 	}
 }

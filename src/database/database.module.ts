@@ -4,26 +4,32 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MySqlConfig } from 'src/config/config.model';
 import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
-import { Page } from './entity/page.entity';
-import { PageRepository } from './repository/page.repository';
-import { ChoiceOption } from './entity/choice-option.entity';
-import { ChoiceOptionRepository } from './repository/choice-option.repository';
-import { Item } from './entity/item.entity';
-import { ChoiceOptionItemMapping } from './entity/choice-option-item-mapping.entity';
-import { ItemRepository } from './repository/item.repository';
-import { ChoiceOptionItemMappingRepository } from './repository/choice-option-item-mapping.repository';
-import { Ending } from './entity/ending.entity';
-import { EndingRepository } from './repository/ending.repository';
-import { Chapter } from './entity/chapter.entity';
-import { ChapterRepository } from './repository/chapter.repository';
-import { User } from './entity/user.entity';
-import { UserRepository } from './repository/user.repository';
-import { PlayRecord } from './entity/play-record.entity';
-import { PlayRecordRepository } from './repository/play-record.repository';
-import { EndingRecord } from './entity/ending-record.entity';
-import { EndingRecordRepository } from './repository/ending-record.repository';
+import {
+	Page,
+	Chapter,
+	ChoiceOption,
+	ChoiceOptionItemMapping,
+	Ending,
+	EndingRecord,
+	Item,
+	PlayRecord,
+	PlayStatus,
+	User
+} from './entity';
+import {
+	PageRepository,
+	ChapterRepository,
+	ChoiceOptionItemMappingRepository,
+	ChoiceOptionRepository,
+	EndingRecordRepository,
+	EndingRepository,
+	ItemRepository,
+	PlayRecordRepository,
+	PlayStatusRepository,
+	UserRepository
+} from './repository';
 
-const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User, PlayRecord, EndingRecord ];
+const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User, PlayRecord, EndingRecord, PlayStatus ];
 const providers = [
 	ChapterRepository,
 	ChoiceOptionItemMappingRepository,
@@ -33,7 +39,8 @@ const providers = [
 	PageRepository,
 	UserRepository,
 	PlayRecordRepository,
-	EndingRecordRepository
+	EndingRecordRepository,
+	PlayStatusRepository
 ].map((repository) => ({
 	provide: repository,
 	useFactory: (dataSource: DataSource) => new repository(dataSource),

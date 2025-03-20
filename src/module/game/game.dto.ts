@@ -1,11 +1,11 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { FetchItemDto } from '../item/item.dto';
-import { ChapterInfo } from '../chapter/chapter.model';
-import { MoveTargetType } from 'src/database/entity/choice-option.entity';
 import { Expose, Type } from 'class-transformer';
-import { ChoiceOptionItemMappingInfo } from '../choice-option/choice-option.model';
 import { IsInt, Min } from 'class-validator';
+import { MoveTargetType } from 'src/database/entity/entity-common.model';
+import { ChapterInfo } from '../chapter/chapter.model';
+import { ChoiceOptionItemMappingInfo } from '../choice-option/choice-option.model';
 import { EndingInfo } from '../ending/ending.model';
+import { FetchItemDto } from '../item/item.dto';
 
 export class GameItem extends OmitType(FetchItemDto, [ 'importance' ]) {}
 
@@ -62,7 +62,7 @@ export class GamePage {
 	public choiceOptions: GameChoiceOption[];
 }
 
-export class SavePlayRecordDto {
+export class SavePlayRecordBody {
 	@ApiProperty({ type: Number, description: '플레이한 페이지 id', minimum: 1 })
 	@IsInt()
 	@Min(1)

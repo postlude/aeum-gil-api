@@ -1,12 +1,11 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { EndingRepository } from 'src/database/repository/ending.repository';
+import { ChoiceOptionRepository, EndingRepository } from 'src/database/repository';
 import { EndingDto, SaveEndingBody } from './ending.dto';
 import { plainToInstance } from 'class-transformer';
 import { EndingInfo } from './ending.model';
 import { Not } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
-import { ChoiceOptionRepository } from 'src/database/repository/choice-option.repository';
-import { MoveTargetType } from 'src/database/entity/choice-option.entity';
+import { MoveTargetType } from 'src/database/entity';
 
 @Injectable()
 export class EndingService {

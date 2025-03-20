@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { ItemRepository } from 'src/database/repository/item.repository';
+import { ItemRepository } from 'src/database/repository';
 import { FetchItemDto, ItemDtoCommon, SaveItemDto } from './item.dto';
 
 @Injectable()
