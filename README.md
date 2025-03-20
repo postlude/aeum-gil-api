@@ -101,3 +101,42 @@
 		constraint user_uq unique (name)
 	) comment '유저';
 </details>
+<details close>
+	<summary>play_record</summary>
+
+	create table play_record (
+		user_id    int unsigned                       not null,
+		page_id    int unsigned                       not null,
+		detail_log json                               not null comment '상세 기록',
+		created_at datetime default CURRENT_TIMESTAMP not null,
+		updated_at datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
+		primary key (user_id, page_id),
+		constraint play_record_page_id_fk
+			foreign key (page_id) references page (id)
+				on delete cascade,
+		constraint play_record_user_id_fk
+			foreign key (user_id) references user (id)
+				on delete cascade
+	) comment '플레이 기록';
+
+	create index play_record_updated_at_index
+		on play_record (updated_at desc);
+</details>
+<details close>
+	<summary>play_status</summary>
+
+	create table play_status (
+		user_id          int unsigned                       not null primary key,
+		move_target_type tinyint unsigned                   not null comment '1: 페이지, 2: 엔딩',
+		target_id        int unsigned                       not null comment '다음 페이지 id or 엔딩 id',
+		owned_items      json                               not null comment '현재 소유한 아이템 정보',
+		created_at       datetime default CURRENT_TIMESTAMP not null,
+		updated_at       datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
+		constraint play_status_user_id_fk
+			foreign key (user_id) references user (id)
+				on delete cascade
+	) comment '유저의 현재 플레이 상태';
+
+	create index play_status_target_id_index
+		on play_status (target_id);
+</details>
