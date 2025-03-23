@@ -211,4 +211,25 @@ export class GameService {
 
 		return plainToInstance(PlayStatusInfo, playStatus, { excludeExtraneousValues: true });
 	}
+
+	public async restorePlayStatus(userId: number, pageId: number) {
+		const record = await this.playRecordRepository.findOneByPk(userId, pageId);
+		if (!record) {
+			throw new NotFoundException('플레이 기록이 없습니다.');
+		}
+
+		const sorted = record.detailLog.sort((prev, next) => prev.createdAt.getTime() - next.createdAt.getTime());
+		const latestLog = sorted.pop();
+		if (!latestLog) {
+			throw new NotFoundException('상세 플레이 기록이 없습니다.');
+		}
+
+		const { ownedItems } = latestLog;
+
+		await this.playStatusRepository.update({ userId }, {
+			moveTargetType: MoveTargetType.Page,
+			targetId: pageId,
+			ownedItems
+		});
+	}
 }

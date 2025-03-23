@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { AuthUser } from 'src/core/auth-user.decorator';
 import { SignInUser } from 'src/core/core.model';
 import { SignInRequired } from 'src/core/sign-in-required.guard';
-import { GameEnding, GameItem, GamePage, SavePlayRecordBody } from './game.dto';
+import { GameEnding, GameItem, GamePage, RestorePlayStatusBody, SavePlayRecordBody } from './game.dto';
 import { PlayStatusInfo } from './game.model';
 import { GameService } from './game.service';
 
@@ -66,5 +66,15 @@ export class GameController {
 		@AuthUser() { userId }: SignInUser
 	) {
 		return await this.gameService.getPlayStatus(userId);
+	}
+
+	@Put('/play-status/restore')
+	@ApiOperation({ summary: '특정 페이지 상태로 상태 복원', description: '엔딩 이후 특정 페이지로 돌아갈 때 사용' })
+	@ApiResponse({ status: HttpStatus.OK })
+	public async restorePlayStatus(
+		@AuthUser() { userId }: SignInUser,
+		@Body() { pageId }: RestorePlayStatusBody
+	) {
+		await this.gameService.restorePlayStatus(userId, pageId);
 	}
 }
