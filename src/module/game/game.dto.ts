@@ -79,3 +79,11 @@ export class GameEnding extends EndingInfo {
 	@Expose()
 	public isCleared: boolean;
 }
+
+export class RestorePlayStatusBody {
+	@ApiProperty({ type: Number, minimum: 1 })
+	@Expose()
+	@IsInt()
+	@Min(1)
+	public pageId: number;
+}

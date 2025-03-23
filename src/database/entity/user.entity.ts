@@ -1,8 +1,10 @@
 import {
 	Column,
 	Entity,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from 'typeorm';
+import { PlayRecord } from './play-record.entity';
 
 @Entity({ database: 'aeum_gil', name: 'user', comment: '유저' })
 export class User {
@@ -20,4 +22,7 @@ export class User {
 
 	@Column({ name: 'updated_at', type: 'datetime' })
 	public updatedAt: Date;
+
+	@OneToMany(() => PlayRecord, (playRecord) => playRecord.user)
+	public playRecords?: PlayRecord[];
 }
