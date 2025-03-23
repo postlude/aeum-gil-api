@@ -70,11 +70,11 @@ export class GameController {
 
 	@Put('/play-status/restore')
 	@ApiOperation({ summary: '특정 페이지 상태로 상태 복원', description: '엔딩 이후 특정 페이지로 돌아갈 때 사용' })
-	@ApiResponse({ status: HttpStatus.OK })
+	@ApiResponse({ status: HttpStatus.OK, type: PlayStatusInfo, description: '복원된 플레이 상태' })
 	public async restorePlayStatus(
 		@AuthUser() { userId }: SignInUser,
 		@Body() { pageId }: RestorePlayStatusBody
 	) {
-		await this.gameService.restorePlayStatus(userId, pageId);
+		return await this.gameService.restorePlayStatus(userId, pageId);
 	}
 }

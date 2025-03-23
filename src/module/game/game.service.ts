@@ -226,10 +226,13 @@ export class GameService {
 
 		const { ownedItems } = latestLog;
 
-		await this.playStatusRepository.update({ userId }, {
+		const playStatus = {
 			moveTargetType: MoveTargetType.Page,
 			targetId: pageId,
 			ownedItems
-		});
+		};
+		await this.playStatusRepository.update({ userId }, playStatus);
+
+		return playStatus;
 	}
 }
