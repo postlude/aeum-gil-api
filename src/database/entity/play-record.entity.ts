@@ -7,8 +7,8 @@ import {
 	Relation
 } from 'typeorm';
 import { OwnedItem } from './entity-common.model';
-import { User } from './user.entity';
 import { Page } from './page.entity';
+import { User } from './user.entity';
 
 export interface PlayRecordDetailLog {
 	choiceOptionId: number;
@@ -26,7 +26,18 @@ export class PlayRecord {
 	public pageId: number;
 
 	@Column({ name: 'detail_log', type: 'json', comment: '상세 기록' })
-	public detailLog: PlayRecordDetailLog[];
+	private _detailLog: PlayRecordDetailLog[];
+
+	public get detailLog() {
+		return this._detailLog.map(({ createdAt, ...rest }) => ({
+			...rest,
+			createdAt: new Date(createdAt)
+		}));
+	}
+
+	public set detailLog(value: PlayRecordDetailLog[]) {
+		this._detailLog = value;
+	}
 
 	@Column({ name: 'created_at', type: 'datetime' })
 	public createdAt: Date;
