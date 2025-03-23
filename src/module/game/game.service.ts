@@ -6,6 +6,8 @@ import { isExists } from 'src/util/validator';
 import { Transactional } from 'typeorm-transactional';
 import { GameEnding, GameItem, GamePage } from './game.dto';
 import { PlayStatusInfo } from './game.model';
+import { ArrayUtil } from 'src/util/array-util.service';
+import { partition } from 'lodash';
 
 @Injectable()
 export class GameService {
@@ -16,7 +18,8 @@ export class GameService {
 		private readonly endingRepository: EndingRepository,
 		private readonly endingRecordRepository: EndingRecordRepository,
 		private readonly playStatusRepository: PlayStatusRepository,
-		private readonly choiceOptionRepository: ChoiceOptionRepository
+		private readonly choiceOptionRepository: ChoiceOptionRepository,
+		private readonly arrayUtil: ArrayUtil
 	) {}
 
 	public async getAllGameItems() {
@@ -98,17 +101,26 @@ export class GameService {
 			return ownedItems;
 		}
 
-		const ownedItemIds = ownedItems.map(({ itemId }) => itemId);
+		const [ randomGainItems, calculateTargetItems ] = partition(itemMappings, ({ actionType }) => actionType === ItemActionType.RandomGain);
+
+		const picked = this.arrayUtil.pickRandom(randomGainItems);
+
 		const mappingItemIds = itemMappings.map(({ itemId }) => itemId);
+		const ownedItemIds = ownedItems.map(({ itemId }) => itemId);
 		const itemSet = new Set([ ...ownedItemIds, ...mappingItemIds ]);
 		const itemIds = Array.from(itemSet);
 
 		return itemIds.map((itemId) => {
 			const ownedItem = ownedItems.find((oi) => oi.itemId === itemId);
-			const mappingItem = itemMappings.find((im) => im.itemId === itemId);
+			const mappingItem = calculateTargetItems.find((im) => im.itemId === itemId);
 
 			if (ownedItem) {
 				const { count } = ownedItem;
+
+				// 소유 O, 랜덤 획득 O
+				if (itemId === picked.itemId) {
+					return { itemId, count: count + 1 };
+				}
 
 				// 소유 O, 매핑 O
 				if (mappingItem) {
@@ -128,6 +140,11 @@ export class GameService {
 
 				// 소유 O, 매핑 X
 				return { itemId, count };
+			}
+
+			// 소유 X, 랜덤 획득 O
+			if (itemId === picked.itemId) {
+				return { itemId, count: 1 };
 			}
 
 			// 소유 X, 매핑 O
@@ -163,7 +180,7 @@ export class GameService {
 		};
 
 		if (playRecord) {
-			const { detailLog } = playRecord;
+			const detailLog = playRecord.getDetailLog();
 			detailLog.push(currentDetailLog);
 			await this.playRecordRepository.update({ userId, pageId }, { detailLog });
 		} else {
@@ -218,7 +235,7 @@ export class GameService {
 			throw new NotFoundException('플레이 기록이 없습니다.');
 		}
 
-		const sorted = record.detailLog.sort((prev, next) => prev.createdAt.getTime() - next.createdAt.getTime());
+		const sorted = record.getDetailLog().sort((prev, next) => prev.createdAt.getTime() - next.createdAt.getTime());
 		const latestLog = sorted.pop();
 		if (!latestLog) {
 			throw new NotFoundException('상세 플레이 기록이 없습니다.');
