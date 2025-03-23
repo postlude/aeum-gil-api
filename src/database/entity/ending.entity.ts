@@ -21,6 +21,9 @@ export class Ending {
 	@Column({ name: 'order_num', type: 'tinyint', unsigned: true, comment: '엔딩 순서' })
 	public orderNum: number;
 
+	@Column({ name: 'return_page_id', type: 'int', unsigned: true, comment: '엔딩 후 되돌아갈 page.id' })
+	public returnPageId: number;
+
 	@Column({ name: 'created_at', type: 'datetime' })
 	public createdAt: Date;
 
