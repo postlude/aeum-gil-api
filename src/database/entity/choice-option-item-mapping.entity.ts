@@ -10,7 +10,8 @@ import { ChoiceOption } from './choice-option.entity';
 
 export enum ItemActionType {
 	Gain = 1,
-	Loss
+	Loss,
+	RandomGain
 }
 
 @Entity({ database: 'aeum_gil', name: 'choice_option_item_mapping', comment: '선택지-아이템 매핑' })
