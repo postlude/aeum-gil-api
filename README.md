@@ -84,9 +84,13 @@
 		description varchar(300)                       not null comment '설명',
 		content     text                               not null comment '본문',
 		order_num   tinyint unsigned                   not null comment '엔딩 순서',
+		return_page_id int unsigned                    not null comment '엔딩 후 되돌아갈 page.id',
 		created_at  datetime default CURRENT_TIMESTAMP not null,
 		updated_at  datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
-		constraint ending_uq unique (order_num)
+		constraint ending_uq
+			unique (order_num)
+		constraint ending_page_id_fk
+			foreign key (return_page_id) references page (id)
 	) comment '엔딩';
 </details>
 <details close>
