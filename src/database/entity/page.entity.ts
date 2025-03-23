@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { ChoiceOption } from './choice-option.entity';
 import { Chapter } from './chapter.entity';
+import { PlayRecord } from './play-record.entity';
 
 @Entity({ database: 'aeum_gil', name: 'page', comment: '페이지' })
 export class Page {
@@ -42,4 +43,7 @@ export class Page {
 
 	@OneToMany(() => ChoiceOption, (choiceOption) => choiceOption.page)
 	public choiceOptions?: ChoiceOption[];
+
+	@OneToMany(() => PlayRecord, (playRecord) => playRecord.page)
+	public playRecords?: PlayRecord[];
 }
