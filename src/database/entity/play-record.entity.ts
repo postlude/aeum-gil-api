@@ -1,9 +1,14 @@
 import {
 	Column,
 	Entity,
-	PrimaryColumn
+	JoinColumn,
+	ManyToOne,
+	PrimaryColumn,
+	Relation
 } from 'typeorm';
 import { OwnedItem } from './entity-common.model';
+import { User } from './user.entity';
+import { Page } from './page.entity';
 
 export interface PlayRecordDetailLog {
 	choiceOptionId: number;
@@ -28,4 +33,12 @@ export class PlayRecord {
 
 	@Column({ name: 'updated_at', type: 'datetime' })
 	public updatedAt: Date;
+
+	@ManyToOne(() => User, (user) => user.playRecords)
+	@JoinColumn({ name: 'user_id' })
+	public user?: User;
+
+	@ManyToOne(() => Page, (page) => page.playRecords)
+	@JoinColumn({ name: 'page_id' })
+	public page?: Relation<Page>;
 }
