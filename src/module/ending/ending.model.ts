@@ -27,4 +27,10 @@ export class EndingInfo {
 	@IsInt()
 	@Min(1)
 	public orderNum: number;
+
+	@ApiProperty({ type: Number, description: '엔딩 후 되돌아갈 page.id', minimum: 1 })
+	@Expose()
+	@IsInt()
+	@Min(1)
+	public returnPageId: number;
 }
