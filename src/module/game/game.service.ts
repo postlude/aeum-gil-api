@@ -163,7 +163,7 @@ export class GameService {
 		};
 
 		if (playRecord) {
-			const { detailLog } = playRecord;
+			const detailLog = playRecord.getDetailLog();
 			detailLog.push(currentDetailLog);
 			await this.playRecordRepository.update({ userId, pageId }, { detailLog });
 		} else {
@@ -218,7 +218,7 @@ export class GameService {
 			throw new NotFoundException('플레이 기록이 없습니다.');
 		}
 
-		const sorted = record.detailLog.sort((prev, next) => prev.createdAt.getTime() - next.createdAt.getTime());
+		const sorted = record.getDetailLog().sort((prev, next) => prev.createdAt.getTime() - next.createdAt.getTime());
 		const latestLog = sorted.pop();
 		if (!latestLog) {
 			throw new NotFoundException('상세 플레이 기록이 없습니다.');
