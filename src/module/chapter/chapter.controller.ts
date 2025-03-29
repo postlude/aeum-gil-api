@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ChapterService } from './chapter.service';
-import { ChapterDto, SaveChapterDto } from './chapter.dto';
 import { AdminOnly } from '../../core/admin-only.guard';
+import { AddChapterBody, ChapterDto, ModifyChapterBody } from './chapter.dto';
+import { ChapterService } from './chapter.service';
 
 @Controller('/chapters')
 @UseGuards(AdminOnly)
@@ -24,9 +24,9 @@ export class ChapterController {
 	@ApiOperation({ summary: '챕터 신규 추가' })
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '생성된 chapter.id' })
 	public async addChapter(
-		@Body() { title, image }: SaveChapterDto
+		@Body() body: AddChapterBody
 	) {
-		const chapterId = await this.chapterService.saveChapter({ title, image });
+		const chapterId = await this.chapterService.saveChapter(body);
 		return chapterId;
 	}
 
@@ -35,9 +35,9 @@ export class ChapterController {
 	@ApiResponse({ status: HttpStatus.OK, type: Number, description: '수정된 chapter.id' })
 	public async setChapter(
 		@Param('chapterId', ParseIntPipe) chapterId: number,
-		@Body() { title, image }: SaveChapterDto
+		@Body() body: ModifyChapterBody
 	) {
-		await this.chapterService.saveChapter({ title, image, chapterId });
+		await this.chapterService.saveChapter({ ...body, chapterId });
 		return chapterId;
 	}
 

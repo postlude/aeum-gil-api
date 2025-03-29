@@ -1,17 +1,19 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { ChoiceOptionItemMapping, ItemActionType, MoveTargetType, OwnedItem, PlayRecord } from 'src/database/entity';
-import { ChoiceOptionRepository, EndingRecordRepository, EndingRepository, ItemRepository, PageRepository, PlayRecordRepository, PlayStatusRepository } from 'src/database/repository';
+import { ChapterRepository, ChoiceOptionRepository, EndingRecordRepository, EndingRepository, ItemRepository, PageRepository, PlayRecordRepository, PlayStatusRepository } from 'src/database/repository';
 import { isExists } from 'src/util/validator';
 import { Transactional } from 'typeorm-transactional';
 import { GameEnding, GameItem, GamePage } from './game.dto';
 import { PlayStatusInfo } from './game.model';
 import { ArrayUtil } from 'src/util/array-util.service';
 import { partition } from 'lodash';
+import { ChapterInfo } from '../chapter/chapter.model';
 
 @Injectable()
 export class GameService {
 	constructor(
+		private readonly chapterRepository: ChapterRepository,
 		private readonly pageRepository: PageRepository,
 		private readonly itemRepository: ItemRepository,
 		private readonly playRecordRepository: PlayRecordRepository,
@@ -251,5 +253,15 @@ export class GameService {
 		await this.playStatusRepository.update({ userId }, playStatus);
 
 		return playStatus;
+	}
+
+	public async getAllGameChapters() {
+		const chapters = await this.chapterRepository.find({
+			order: {
+				id: 'ASC'
+			}
+		});
+
+		return plainToInstance(ChapterInfo, chapters, { excludeExtraneousValues: true });
 	}
 }

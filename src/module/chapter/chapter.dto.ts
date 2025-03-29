@@ -1,8 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { ChapterInfo } from './chapter.model';
 import { Expose } from 'class-transformer';
 
-export class SaveChapterDto extends ChapterInfo {}
+export class AddChapterBody extends OmitType(ChapterInfo, [ 'firstPageId' ]) {}
+
+export class ModifyChapterBody extends ChapterInfo {}
 
 export class ChapterDto extends ChapterInfo {
 	@ApiProperty({ type: Number })
