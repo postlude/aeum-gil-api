@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ChapterRepository, PageRepository } from 'src/database/repository';
 import { Transactional } from 'typeorm-transactional';
 
@@ -12,13 +12,22 @@ export class ChapterService {
 	public async saveChapter(params: {
 		title: string,
 		image: string,
+		firstPageId?: number | null,
 		chapterId?: number
 	}) {
-		const { title, image, chapterId } = params;
+		const { title, image, firstPageId, chapterId } = params;
+
+		if (firstPageId && chapterId) {
+			const isExist = !!await this.pageRepository.countBy({ id: firstPageId, chapterId });
+			if (!isExist) {
+				throw new NotFoundException('해당 챕터에 속하지 않는 페이지입니다.');
+			}
+		}
 
 		const result = await this.chapterRepository.save({
 			title,
 			image,
+			firstPageId,
 			id: chapterId
 		});
 		return result.id;
