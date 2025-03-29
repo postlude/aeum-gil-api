@@ -22,7 +22,7 @@ export class ChoiceOptionItemMapping {
 	@PrimaryColumn({ name: 'item_id', type: 'int', unsigned: true })
 	public itemId: number;
 
-	@Column({ name: 'action_type', type: 'tinyint', unsigned: true, comment: '1: 획득, 2: 소모' })
+	@Column({ name: 'action_type', type: 'tinyint', unsigned: true, comment: '1: 획득, 2: 소모, 3: 랜덤 획득' })
 	public actionType: ItemActionType;
 
 	@Column({ name: 'created_at', type: 'datetime' })

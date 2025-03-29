@@ -17,6 +17,9 @@ export class Chapter {
 	@Column({ type: 'varchar', length: 400, comment: '배경 이미지' })
 	public image: string;
 
+	@Column({ name: 'first_page_id', type: 'int', unsigned: true, nullable: true, comment: '챕터의 첫 번째 page.id' })
+	public firstPageId: number | null;
+
 	@Column({ name: 'created_at', type: 'datetime' })
 	public createdAt: Date;
 

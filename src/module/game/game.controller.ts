@@ -6,6 +6,7 @@ import { SignInRequired } from 'src/core/sign-in-required.guard';
 import { GameEnding, GameItem, GamePage, RestorePlayStatusBody, SavePlayRecordBody } from './game.dto';
 import { PlayStatusInfo } from './game.model';
 import { GameService } from './game.service';
+import { ChapterInfo } from '../chapter/chapter.model';
 
 @Controller('/game')
 @UseGuards(SignInRequired)
@@ -15,6 +16,13 @@ export class GameController {
 	constructor(
 		private readonly gameService: GameService
 	) {}
+
+	@Get('/chapters')
+	@ApiOperation({ summary: '전체 챕터 조회' })
+	@ApiResponse({ status: HttpStatus.OK, type: [ ChapterInfo ] })
+	public async getAllGameChapters() {
+		return await this.gameService.getAllGameChapters();
+	}
 
 	@Get('/items')
 	@ApiOperation({ summary: '전체 게임 아이템 조회' })
