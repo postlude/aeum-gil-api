@@ -16,8 +16,8 @@ export class PlayStatus {
 	@Column({ name: 'target_id', type: 'int', unsigned: true, comment: '다음 페이지 id or 엔딩 id' })
 	public targetId: number;
 
-	@Column({ name: 'owned_items', type: 'json', comment: '현재 소유한 아이템 정보' })
-	public ownedItems: OwnedItem[];
+	@Column({ name: 'owned_items', type: 'json', nullable: true, comment: '현재 소유한 아이템 정보' })
+	public ownedItems: OwnedItem[] | null;
 
 	@Column({ name: 'created_at', type: 'datetime' })
 	public createdAt: Date;

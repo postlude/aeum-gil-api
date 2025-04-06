@@ -5,7 +5,7 @@ import { ChapterRepository, ChoiceOptionRepository, EndingRecordRepository, Endi
 import { isExists } from 'src/util/validator';
 import { Transactional } from 'typeorm-transactional';
 import { GameEnding, GameItem, GamePage } from './game.dto';
-import { PlayStatusInfo } from './game.model';
+import { FirstPageId, InitialGameStatus, PlayStatusInfo } from './game.model';
 import { ArrayUtil } from 'src/util/array-util.service';
 import { partition } from 'lodash';
 import { ChapterInfo } from '../chapter/chapter.model';
@@ -98,7 +98,7 @@ export class GameService {
 		return { moveTargetType, targetId, ownedItems: calculatedItems };
 	}
 
-	private calculateItems(ownedItems: OwnedItem[], itemMappings?: ChoiceOptionItemMapping[]) {
+	private calculateItems(ownedItems: OwnedItem[] | null, itemMappings?: ChoiceOptionItemMapping[]) {
 		if (!itemMappings?.length) {
 			return ownedItems;
 		}
@@ -108,12 +108,12 @@ export class GameService {
 		const picked = this.arrayUtil.pickRandom(randomGainItems);
 
 		const mappingItemIds = itemMappings.map(({ itemId }) => itemId);
-		const ownedItemIds = ownedItems.map(({ itemId }) => itemId);
+		const ownedItemIds = ownedItems?.map(({ itemId }) => itemId) ?? [];
 		const itemSet = new Set([ ...ownedItemIds, ...mappingItemIds ]);
 		const itemIds = Array.from(itemSet);
 
 		return itemIds.map((itemId) => {
-			const ownedItem = ownedItems.find((oi) => oi.itemId === itemId);
+			const ownedItem = ownedItems?.find((oi) => oi.itemId === itemId);
 			const mappingItem = calculateTargetItems.find((im) => im.itemId === itemId);
 
 			if (ownedItem) {
@@ -169,8 +169,8 @@ export class GameService {
 		choiceOptionId: number,
 		moveTargetType: MoveTargetType,
 		targetId: number,
-		ownedItems: OwnedItem[],
-		calculatedItems: OwnedItem[],
+		ownedItems: OwnedItem[] | null,
+		calculatedItems: OwnedItem[] | null,
 		playRecord: PlayRecord | null,
 	}) {
 		const { userId, pageId, choiceOptionId, moveTargetType, targetId, ownedItems, calculatedItems, playRecord } = params;
@@ -232,6 +232,11 @@ export class GameService {
 	}
 
 	public async restorePlayStatus(userId: number, pageId: number) {
+		if (pageId === FirstPageId) {
+			await this.playStatusRepository.update({ userId }, InitialGameStatus);
+			return InitialGameStatus;
+		}
+
 		const record = await this.playRecordRepository.findOneByPk(userId, pageId);
 		if (!record) {
 			throw new NotFoundException('플레이 기록이 없습니다.');
