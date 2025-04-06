@@ -19,12 +19,6 @@ export class Page {
 	@Column({ name: 'chapter_id', type: 'int', unsigned: true, nullable: true })
 	public chapterId: number | null;
 
-	@Column({ type: 'varchar', length: 300, nullable: true, comment: '페이지 설명' })
-	public description: string | null;
-
-	@Column({ type: 'varchar', length: 200, comment: '제목' })
-	public title: string;
-
 	@Column({ type: 'varchar', length: 30, comment: '장소' })
 	public place: string;
 
