@@ -10,12 +10,6 @@ export class EndingInfo {
 	@MaxLength(200)
 	public title: string;
 
-	@ApiProperty({ type: String, nullable: true, description: '설명' })
-	@Expose()
-	@IsString()
-	@IsNotEmpty()
-	public description: string;
-
 	@ApiProperty({ type: String, description: '본문' })
 	@Expose()
 	@IsString()
