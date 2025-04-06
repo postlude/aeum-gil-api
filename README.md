@@ -146,7 +146,7 @@
 		user_id          int unsigned                       not null primary key,
 		move_target_type tinyint unsigned                   not null comment '1: 페이지, 2: 엔딩',
 		target_id        int unsigned                       not null comment '다음 페이지 id or 엔딩 id',
-		owned_items      json                               not null comment '현재 소유한 아이템 정보',
+		owned_items      json                               null comment '현재 소유한 아이템 정보',
 		created_at       datetime default CURRENT_TIMESTAMP not null,
 		updated_at       datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
 		constraint play_status_user_id_fk
