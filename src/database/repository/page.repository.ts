@@ -31,7 +31,7 @@ export class PageRepository extends Repository<Page> {
 			.comment('PageRepository.findAllGamePages')
 			.select([
 				'c.title', 'c.image',
-				'p.id', 'p.title', 'p.place', 'p.content',
+				'p.id', 'p.place', 'p.content',
 				'co.id', 'co.moveTargetType', 'co.targetId', 'co.content',
 				'coim.itemId', 'coim.actionType'
 			])
