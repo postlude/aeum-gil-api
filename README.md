@@ -13,12 +13,26 @@
 ## DDL
 
 <details close>
+	<summary>chapter</summary>
+	
+	create table chapter (
+		id            int unsigned auto_increment primary key,
+		title         varchar(50)                        null comment '챕터 제목',
+		image         varchar(400)                       not null comment '배경 이미지',
+		first_page_id int unsigned                       null comment '챕터의 첫 번째 page.id',
+		created_at    datetime default CURRENT_TIMESTAMP not null,
+		updated_at    datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
+		constraint chapter_page_id_fk
+			foreign key (first_page_id) references page (id)
+	) comment '챕터';
+</details>
+<details close>
 	<summary>page</summary>
 	
 	CREATE TABLE page (
 		id          int unsigned AUTO_INCREMENT PRIMARY KEY,
-		description varchar(300)                       NULL COMMENT '페이지 설명',
-		title       varchar(200)                       NOT NULL COMMENT '제목',
+		chapter_id int unsigned                       null,
+		place      varchar(30)                        not null comment '장소',
 		content     text                               NOT NULL COMMENT '본문',
 		created_at  datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		updated_at  datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP
@@ -63,7 +77,7 @@
 	CREATE TABLE choice_option_item_mapping (
 		choice_option_id int unsigned                       NOT NULL,
 		item_id          int unsigned                       NOT NULL,
-		action_type      tinyint unsigned                   NOT NULL COMMENT '1: 획득, 2: 소모',
+		action_type      tinyint unsigned                   not null comment '1: 획득, 2: 소모, 3: 랜덤 획득',
 		created_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		updated_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
 		PRIMARY KEY (choice_option_id, item_id),
@@ -81,7 +95,6 @@
 	create table ending (
 		id          int unsigned auto_increment primary key,
 		title       varchar(200)                       not null comment '제목',
-		description varchar(300)                       not null comment '설명',
 		content     text                               not null comment '본문',
 		order_num   tinyint unsigned                   not null comment '엔딩 순서',
 		return_page_id int unsigned                    not null comment '엔딩 후 되돌아갈 page.id',
