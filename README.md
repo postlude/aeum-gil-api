@@ -36,6 +36,8 @@
 		content     text                               NOT NULL COMMENT '본문',
 		created_at  datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		updated_at  datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP
+		constraint page_chapter_id_fk
+			foreign key (chapter_id) references chapter (id)
 	) COMMENT '페이지';
 </details>
 <details close>
@@ -156,4 +158,21 @@
 
 	create index play_status_target_id_index
 		on play_status (target_id);
+</details>
+<details close>
+	<summary>ending_record</summary>
+
+	create table ending_record (
+		user_id    int unsigned                       not null,
+		ending_id  int unsigned                       not null,
+		created_at datetime default CURRENT_TIMESTAMP not null,
+		updated_at datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
+		primary key (user_id, ending_id),
+		constraint ending_record_ending_id_fk
+			foreign key (ending_id) references ending (id)
+				on delete cascade,
+		constraint ending_record_user_id_fk
+			foreign key (user_id) references user (id)
+				on delete cascade
+	) comment '엔딩 기록';
 </details>
