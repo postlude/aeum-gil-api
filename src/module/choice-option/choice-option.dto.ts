@@ -1,9 +1,14 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { ArrayNotEmpty, IsEnum, IsInt } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
+import { ArrayNotEmpty, IsBoolean, IsEnum, IsInt, IsOptional } from 'class-validator';
 import { ItemActionType } from 'src/database/entity';
 import { ChoiceOptionInfo, ChoiceOptionItemMappingInfo } from './choice-option.model';
 
-export class AddChoiceOptionBody extends ChoiceOptionInfo {}
+export class AddChoiceOptionBody extends ChoiceOptionInfo {
+	@ApiPropertyOptional({ type: Boolean, default: false, description: 'true일 경우 targetId 체크하지 않음' })
+	@IsOptional()
+	@IsBoolean()
+	public skipChecking: boolean = false
+}
 
 export class SetChoiceOptionBody extends OmitType(ChoiceOptionInfo, [ 'pageId' ]) {}
 

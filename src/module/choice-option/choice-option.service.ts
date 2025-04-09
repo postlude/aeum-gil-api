@@ -15,14 +15,16 @@ export class ChoiceOptionService {
 	) {}
 
 	public async addChoiceOption(choiceOption: AddChoiceOptionBody) {
-		const { pageId, moveTargetType, targetId, orderNum, content } = choiceOption;
+		const { pageId, moveTargetType, targetId, orderNum, content, skipChecking } = choiceOption;
 
-		await this.checkPageEndingExists({
-			type: 'insert',
-			pageId,
-			moveTargetType,
-			targetId
-		});
+		if (!skipChecking) {
+			await this.checkPageEndingExists({
+				type: 'insert',
+				pageId,
+				moveTargetType,
+				targetId
+			});
+		}
 
 		const { identifiers } = await this.choiceOptionRepository.insert({ pageId, moveTargetType, targetId, orderNum, content });
 		return identifiers[0].id as number;
