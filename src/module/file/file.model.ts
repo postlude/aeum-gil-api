@@ -1,5 +1,7 @@
 export enum ImageType {
 	Page = 'page',
 	Item = 'item',
-	Chapter = 'chapter'
+	Chapter = 'chapter',
+	Object = 'object',
+	Ending = 'ending'
 }

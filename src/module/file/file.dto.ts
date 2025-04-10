@@ -9,7 +9,7 @@ export class GetPresignedUrlRequest {
 	@Matches(/\.(jpg|jpeg|png|gif)$/)
 	public fileName: string;
 
-	@ApiProperty({ enum: ImageType, description: 'page | item | chapter' })
+	@ApiProperty({ enum: ImageType, description: 'page | item | chapter | object | ending' })
 	@IsEnum(ImageType)
 	public imageType: ImageType;
 }
