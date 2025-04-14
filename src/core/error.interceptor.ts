@@ -20,18 +20,17 @@ export class ErrorInterceptor implements NestInterceptor {
 			.handle()
 			.pipe(
 				catchError((err) => {
-					if (err instanceof HttpException) {
-						const status = err.getStatus();
+					const shouldNotify = err instanceof HttpException
+						? err.getStatus() >= 500
+						: err instanceof Error;
 
-						if (status >= 500) {
-							const { message, stack } = err;
+					if (shouldNotify) {
+						const { message, stack } = err;
+						const stackMessage = stack ? `\n\`\`\`${stack}\`\`\`` : '';
+						const content = `API Error Occured\n\n> ${message}${stackMessage}`;
 
-							const stackMessage = stack ? `\n\`\`\`${stack}\`\`\`` : '';
-							const content = `API Error Occured\n\n> ${message}${stackMessage}`;
-
-							// floating
-							this.discordService.sendMessage({ content });
-						}
+						// floating
+						this.discordService.sendMessage({ content });
 					}
 
 					return throwError(() => err);
