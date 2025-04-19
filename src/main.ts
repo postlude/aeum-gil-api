@@ -9,7 +9,7 @@ async function bootstrap() {
 	initializeTransactionalContext();
 
 	const app = await NestFactory.create(AppModule);
-	const port = 3000;
+	const port = 3001;
 
 	app.enableCors({
 		origin: [ /localhost/, /aeum-gil.com/ ]
