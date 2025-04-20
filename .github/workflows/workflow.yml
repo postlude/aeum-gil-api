@@ -33,4 +33,4 @@ jobs:
         aws-region: ap-northeast-2
     - name: Force update ECS Service
       run: |
-       aws ecs update-service --cluster aeum-gil-api --service aeum-gil-api-service --force-new-deployment
+       aws ecs update-service --cluster postlude --service postlude-svc --force-new-deployment
