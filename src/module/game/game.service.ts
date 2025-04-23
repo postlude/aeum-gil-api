@@ -105,7 +105,7 @@ export class GameService {
 
 		const [ randomGainItems, calculateTargetItems ] = partition(itemMappings, ({ actionType }) => actionType === ItemActionType.RandomGain);
 
-		const picked = this.arrayUtil.pickRandom(randomGainItems);
+		const picked = randomGainItems.length ? this.arrayUtil.pickRandom(randomGainItems) : null;
 
 		const mappingItemIds = itemMappings.map(({ itemId }) => itemId);
 		const ownedItemIds = ownedItems?.map(({ itemId }) => itemId) ?? [];
@@ -120,7 +120,7 @@ export class GameService {
 				const { count } = ownedItem;
 
 				// 소유 O, 랜덤 획득 O
-				if (itemId === picked.itemId) {
+				if (itemId === picked?.itemId) {
 					return { itemId, count: count + 1 };
 				}
 
@@ -145,7 +145,7 @@ export class GameService {
 			}
 
 			// 소유 X, 랜덤 획득 O
-			if (itemId === picked.itemId) {
+			if (itemId === picked?.itemId) {
 				return { itemId, count: 1 };
 			}
 
