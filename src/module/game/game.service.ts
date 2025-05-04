@@ -98,6 +98,10 @@ export class GameService {
 		return { moveTargetType, targetId, ownedItems: calculatedItems };
 	}
 
+	/**
+	 * 아이템은 무조건 1개씩 얻거나 소모한다.
+	 * 아이템을 모두 소모한 경우 소유 목록에서 제거한다.
+	 */
 	private calculateItems(ownedItems: OwnedItem[] | null, itemMappings?: ChoiceOptionItemMapping[]) {
 		if (!itemMappings?.length) {
 			return ownedItems;
@@ -112,7 +116,7 @@ export class GameService {
 		const itemSet = new Set([ ...ownedItemIds, ...mappingItemIds ]);
 		const itemIds = Array.from(itemSet);
 
-		return itemIds.map((itemId) => {
+		const calculated = itemIds.map((itemId) => {
 			const ownedItem = ownedItems?.find((oi) => oi.itemId === itemId);
 			const mappingItem = calculateTargetItems.find((im) => im.itemId === itemId);
 
@@ -127,8 +131,6 @@ export class GameService {
 				// 소유 O, 매핑 O
 				if (mappingItem) {
 					const { actionType } = mappingItem;
-
-					// TODO: 아이템 소모일 때 개수가 더 적으면 throw Error
 
 					const calculatedCount = actionType === ItemActionType.Gain ? count + 1 : count - 1;
 
@@ -160,6 +162,8 @@ export class GameService {
 				return { itemId, count: 1 };
 			}
 		}).filter(isExists);
+
+		return calculated.length ? calculated : null;
 	}
 
 	@Transactional()
