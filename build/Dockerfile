@@ -8,7 +8,8 @@ COPY .. ${SERVER_HOME}
 
 WORKDIR ${SERVER_HOME}
 
-RUN yarn \
+RUN yarn -v \
+	&& yarn \
 	&& yarn build
 
 CMD ["yarn", "start:prod"]
