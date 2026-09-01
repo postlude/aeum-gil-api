@@ -19,7 +19,7 @@ import { GameModule } from './module/game/game.module';
 	imports: [
 		// When a key exists both in the runtime environment as an environment variable and in a .env file, the runtime environment variable takes precedence.
 		ConfigModule.forRoot({
-			envFilePath: [ 'src/config/local.env' ],
+			envFilePath: [ 'src/config/.env' ],
 			isGlobal: true
 		}),
 		ScheduleModule.forRoot(),
