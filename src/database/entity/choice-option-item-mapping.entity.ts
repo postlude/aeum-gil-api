@@ -14,21 +14,21 @@ export enum ItemActionType {
 	RandomGain
 }
 
-@Entity({ database: 'aeum_gil', name: 'choice_option_item_mapping', comment: '선택지-아이템 매핑' })
+@Entity({ name: 'choice_option_item_mapping', comment: '선택지-아이템 매핑' })
 export class ChoiceOptionItemMapping {
-	@PrimaryColumn({ name: 'choice_option_id', type: 'int', unsigned: true })
+	@PrimaryColumn({ name: 'choice_option_id', type: 'int' })
 	public choiceOptionId: number;
 
-	@PrimaryColumn({ name: 'item_id', type: 'int', unsigned: true })
+	@PrimaryColumn({ name: 'item_id', type: 'int' })
 	public itemId: number;
 
-	@Column({ name: 'action_type', type: 'tinyint', unsigned: true, comment: '1: 획득, 2: 소모, 3: 랜덤 획득' })
+	@Column({ name: 'action_type', type: 'smallint', comment: '1: 획득, 2: 소모, 3: 랜덤 획득' })
 	public actionType: ItemActionType;
 
-	@Column({ name: 'created_at', type: 'datetime' })
+	@Column({ name: 'created_at', type: 'timestamptz' })
 	public createdAt: Date;
 
-	@Column({ name: 'updated_at', type: 'datetime' })
+	@Column({ name: 'updated_at', type: 'timestamptz' })
 	public updatedAt: Date;
 
 	@ManyToOne(() => ChoiceOption, (choiceOption) => choiceOption.choiceOptionItemMappings)

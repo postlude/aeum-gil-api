@@ -4,9 +4,9 @@ import {
 	PrimaryGeneratedColumn
 } from 'typeorm';
 
-@Entity({ database: 'aeum_gil', name: 'item', comment: '아이템' })
+@Entity({ name: 'item', comment: '아이템' })
 export class Item {
-	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
+	@PrimaryGeneratedColumn({ type: 'int' })
 	public id: number;
 
 	@Column({ type: 'varchar', length: 100 })
@@ -15,15 +15,15 @@ export class Item {
 	@Column({ type: 'varchar', length: 200, comment: '설명' })
 	public description: string;
 
-	@Column({ type: 'tinyint', unsigned: true, comment: '중요도' })
+	@Column({ type: 'smallint', comment: '중요도' })
 	public importance: number;
 
 	@Column({ type: 'varchar', length: 400 })
 	public image: string;
 
-	@Column({ name: 'created_at', type: 'datetime' })
+	@Column({ name: 'created_at', type: 'timestamptz' })
 	public createdAt: Date;
 
-	@Column({ name: 'updated_at', type: 'datetime' })
+	@Column({ name: 'updated_at', type: 'timestamptz' })
 	public updatedAt: Date;
 }

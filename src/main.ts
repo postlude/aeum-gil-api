@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
-import { MySqlConfig } from './config/config.model';
+import { PostgresConfig } from './config/config.model';
 
 async function bootstrap() {
 	initializeTransactionalContext();
@@ -27,11 +27,11 @@ async function bootstrap() {
 
 	await app.listen(port);
 
-	const mysqlHost = app.get(ConfigService<MySqlConfig>)
-		.get('MYSQL_HOST', { infer: true });
+	const postgresHost = app.get(ConfigService<PostgresConfig>)
+		.get('POSTGRES_HOST', { infer: true });
 
 	console.log('========== [AEUM-GIL API] ==========');
 	console.log(`PORT : ${port}`);
-	console.log(`MySQL Host : ${mysqlHost}`);
+	console.log(`PostgreSQL Host : ${postgresHost}`);
 }
 bootstrap();

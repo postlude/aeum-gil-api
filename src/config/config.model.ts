@@ -1,9 +1,9 @@
-export interface MySqlConfig {
-	MYSQL_HOST: string
-	MYSQL_PORT: number
-	MYSQL_USERNAME: string
-	MYSQL_PASSWORD: string
-	MYSQL_DATABASE: string
+export interface PostgresConfig {
+	POSTGRES_HOST: string
+	POSTGRES_PORT: number
+	POSTGRES_USERNAME: string
+	POSTGRES_PASSWORD: string
+	POSTGRES_DATABASE: string
 }
 
 export interface AWSConfig {

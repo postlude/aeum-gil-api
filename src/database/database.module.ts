@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MySqlConfig } from 'src/config/config.model';
+import { PostgresConfig } from 'src/config/config.model';
 import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import {
@@ -52,15 +52,16 @@ const providers = [
 	imports: [
 		TypeOrmModule.forRootAsync({
 			inject: [ ConfigService ],
-			useFactory(configService: ConfigService<MySqlConfig>) {
+			useFactory(configService: ConfigService<PostgresConfig>) {
 				return {
-					type: 'mysql',
-					host: configService.get('MYSQL_HOST', { infer: true }),
-					port: configService.get('MYSQL_PORT', { infer: true }),
-					username: configService.get('MYSQL_USERNAME', { infer: true }),
-					password: configService.get('MYSQL_PASSWORD', { infer: true }),
-					database: configService.get('MYSQL_DATABASE', { infer: true }),
+					type: 'postgres',
+					host: configService.get('POSTGRES_HOST', { infer: true }),
+					port: configService.get('POSTGRES_PORT', { infer: true }),
+					username: configService.get('POSTGRES_USERNAME', { infer: true }),
+					password: configService.get('POSTGRES_PASSWORD', { infer: true }),
+					database: configService.get('POSTGRES_DATABASE', { infer: true }),
 					entities,
+					ssl: { rejectUnauthorized: false },
 					logging: process.env.NODE_ENV === 'local'
 				};
 			},
