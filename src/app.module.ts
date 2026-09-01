@@ -4,6 +4,7 @@ import { DatabaseModule } from './database/database.module';
 import { PageModule } from './module/page/page.module';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ChoiceOptionModule } from './module/choice-option/choice-option.module';
 import { ItemModule } from './module/item/item.module';
 import { FileModule } from './module/file/file.module';
@@ -21,6 +22,7 @@ import { GameModule } from './module/game/game.module';
 			envFilePath: [ 'src/config/local.env' ],
 			isGlobal: true
 		}),
+		ScheduleModule.forRoot(),
 		DatabaseModule,
 		PageModule,
 		ChoiceOptionModule,

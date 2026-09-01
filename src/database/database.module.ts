@@ -28,6 +28,7 @@ import {
 	PlayStatusRepository,
 	UserRepository
 } from './repository';
+import { KeepAliveService } from './keep-alive.service';
 
 const entities = [ Chapter, ChoiceOptionItemMapping, ChoiceOption, Ending, Item, Page, User, PlayRecord, EndingRecord, PlayStatus ];
 const providers = [
@@ -74,7 +75,7 @@ const providers = [
 		}),
 		TypeOrmModule.forFeature(entities)
 	],
-	providers,
+	providers: [ ...providers, KeepAliveService ],
 	exports: [ TypeOrmModule, ...providers ]
 })
 export class DatabaseModule {}
