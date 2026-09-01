@@ -2,11 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MySqlConfig } from './config/config.model';
+import { PostgresConfig } from './config/config.model';
 
 async function bootstrap() {
 	initializeTransactionalContext();
+	const logger = new Logger('Bootstrap');
 
 	const app = await NestFactory.create(AppModule);
 	const port = 3001;
@@ -27,11 +29,11 @@ async function bootstrap() {
 
 	await app.listen(port);
 
-	const mysqlHost = app.get(ConfigService<MySqlConfig>)
-		.get('MYSQL_HOST', { infer: true });
+	const postgresHost = app.get(ConfigService<PostgresConfig>)
+		.get('POSTGRES_HOST', { infer: true });
 
-	console.log('========== [AEUM-GIL API] ==========');
-	console.log(`PORT : ${port}`);
-	console.log(`MySQL Host : ${mysqlHost}`);
+	logger.log('========== [AEUM-GIL API] ==========');
+	logger.log(`PORT : ${port}`);
+	logger.log(`PostgreSQL Host : ${postgresHost}`);
 }
 bootstrap();

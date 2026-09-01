@@ -23,21 +23,21 @@ export class PlayRecordDetailLog {
 	public ownedItems: OwnedItem[] | null;
 }
 
-@Entity({ database: 'aeum_gil', name: 'play_record', comment: '플레이 기록' })
+@Entity({ name: 'play_record', comment: '플레이 기록' })
 export class PlayRecord {
-	@PrimaryColumn({ name: 'user_id', type: 'int', unsigned: true })
+	@PrimaryColumn({ name: 'user_id', type: 'int' })
 	public userId: number;
 
-	@PrimaryColumn({ name: 'page_id', type: 'int', unsigned: true })
+	@PrimaryColumn({ name: 'page_id', type: 'int' })
 	public pageId: number;
 
-	@Column({ name: 'detail_log', type: 'json', comment: '상세 기록' })
+	@Column({ name: 'detail_log', type: 'jsonb', comment: '상세 기록' })
 	public detailLog: PlayRecordDetailLog[];
 
-	@Column({ name: 'created_at', type: 'datetime' })
+	@Column({ name: 'created_at', type: 'timestamptz' })
 	public createdAt: Date;
 
-	@Column({ name: 'updated_at', type: 'datetime' })
+	@Column({ name: 'updated_at', type: 'timestamptz' })
 	public updatedAt: Date;
 
 	@ManyToOne(() => User, (user) => user.playRecords)

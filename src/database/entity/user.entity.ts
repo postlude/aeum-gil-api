@@ -6,9 +6,9 @@ import {
 } from 'typeorm';
 import { PlayRecord } from './play-record.entity';
 
-@Entity({ database: 'aeum_gil', name: 'user', comment: '유저' })
+@Entity({ name: 'user', comment: '유저' })
 export class User {
-	@PrimaryGeneratedColumn({ type: 'int', unsigned: true })
+	@PrimaryGeneratedColumn({ type: 'int' })
 	public id: number;
 
 	@Column({ type: 'varchar', length: 50 })
@@ -17,10 +17,10 @@ export class User {
 	@Column({ type: 'varchar', length: 500 })
 	public password: string;
 
-	@Column({ name: 'created_at', type: 'datetime' })
+	@Column({ name: 'created_at', type: 'timestamptz' })
 	public createdAt: Date;
 
-	@Column({ name: 'updated_at', type: 'datetime' })
+	@Column({ name: 'updated_at', type: 'timestamptz' })
 	public updatedAt: Date;
 
 	@OneToMany(() => PlayRecord, (playRecord) => playRecord.user)
