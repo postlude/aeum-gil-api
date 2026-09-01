@@ -4,6 +4,7 @@ import { DatabaseModule } from './database/database.module';
 import { PageModule } from './module/page/page.module';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ChoiceOptionModule } from './module/choice-option/choice-option.module';
 import { ItemModule } from './module/item/item.module';
 import { FileModule } from './module/file/file.module';
@@ -18,9 +19,10 @@ import { GameModule } from './module/game/game.module';
 	imports: [
 		// When a key exists both in the runtime environment as an environment variable and in a .env file, the runtime environment variable takes precedence.
 		ConfigModule.forRoot({
-			envFilePath: [ 'src/config/local.env' ],
+			envFilePath: [ 'src/config/.env' ],
 			isGlobal: true
 		}),
+		ScheduleModule.forRoot(),
 		DatabaseModule,
 		PageModule,
 		ChoiceOptionModule,
