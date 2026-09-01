@@ -19,7 +19,7 @@ async function bootstrap() {
 
 	const swaggerConfig = new DocumentBuilder()
 		.setTitle('에움길 API')
-		.setVersion('1.1.1')
+		.setVersion('1.2.0')
 		.addBearerAuth()
 		.build();
 	const document = SwaggerModule.createDocument(app, swaggerConfig, {
